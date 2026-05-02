@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PTEFlow — Shadowing Trainer</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f12;
+      --bg2: #13161b;
+      --bg3: #1a1e25;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.13);
+      --text: #e8eaf0;
+      --text2: #8a8f9e;
+      --text3: #525769;
+      --green: #1DB97A;
+      --green-dim: rgba(29,185,122,0.12);
+      --green-glow: rgba(29,185,122,0.25);
+      --amber: #F0A020;
+      --amber-dim: rgba(240,160,32,0.12);
+      --coral: #E05A3A;
+      --coral-dim: rgba(224,90,58,0.12);
+      --blue: #4D9FEC;
+      --blue-dim: rgba(77,159,236,0.12);
+      --purple: #8B7FE8;
+      --purple-dim: rgba(139,127,232,0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
+
+    html { font-size: 16px; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+    /* LAYOUT */
+    .app {
+      max-width: 720px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-mark {
+      width: 34px; height: 34px;
+      background: var(--green);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 600;
+      color: #0d0f12;
+      letter-spacing: -0.5px;
+      box-shadow: 0 0 20px var(--green-glow);
+    }
+    .logo-name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
+    .logo-sub { font-size: 11px; color: var(--text3); font-weight: 400; margin-top: 1px; }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .target-badge {
+      padding: 5px 12px;
+      background: var(--green-dim);
+      border: 1px solid var(--green);
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 500;
+    }
+    .settings-btn {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      transition: all 0.15s;
+    }
+    .settings-btn:hover { border-color: var(--border2); background: var(--bg3); color: var(--text); }
+
+    /* LEVEL PROGRESS */
+    .level-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 24px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+    }
+    .lv-badge {
+      font-size: 11px; font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .lv1 { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(77,159,236,0.3); }
+    .lv2 { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(240,160,32,0.3); }
+    .lv3 { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(224,90,58,0.3); }
+    .lv4 { background: var(--green-dim); color: var(--green); border: 1px solid rgba(29,185,122,0.3); }
+    .bar-track {
+      flex: 1;
+      height: 4px;
+      background: var(--bg3);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: var(--green);
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 8px var(--green-glow);
+    }
+    .bar-label { font-size: 12px; color: var(--text3); min-width: 44px; text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* NAV */
+    nav {
+      display: flex;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border);
+      gap: 0;
+    }
+    .nav-tab {
+      padding: 11px 16px;
+      font-size: 13px;
+      color: var(--text3);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      font-family: var(--font);
+      background: transparent;
+      border-top: none; border-left: none; border-right: none;
+      margin-bottom: -1px;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text2); }
+    .nav-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 500; }
+
+    /* CONTENT */
+    main { flex: 1; padding: 24px; }
+
+    /* SENTENCE CARD */
+    .sentence-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .sentence-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green-glow), transparent);
+    }
+    .type-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .type-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .pill-shadow { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(77,159,236,0.25); }
+    .pill-repeat { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(240,160,32,0.25); }
+    .pill-describe { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(224,90,58,0.25); }
+    .pill-retell { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(139,127,232,0.25); }
+    .wpm-label { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+
+    .sentence-text {
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+      transition: filter 0.3s ease;
+    }
+    .sentence-text.blurred { filter: blur(6px); user-select: none; }
+    .phonetic {
+      font-size: 12px;
+      color: var(--text3);
+      font-family: var(--mono);
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
+    }
+    .sentence-meta {
+      font-size: 12px;
+      color: var(--text3);
+      margin-bottom: 20px;
+    }
+
+    /* TEMPLATE HINT */
+    .template-hint {
+      background: var(--amber-dim);
+      border: 1px solid rgba(240,160,32,0.2);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--amber);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .template-hint strong { font-weight: 500; }
+
+    /* AUDIO VISUALIZER */
+    .audio-vis {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 32px;
+      margin-bottom: 16px;
+    }
+    .vis-bar {
+      width: 3px;
+      background: var(--green);
+      border-radius: 3px;
+      opacity: 0.4;
+      transition: height 0.08s ease;
+    }
+    .vis-bar.active { opacity: 1; }
+
+    /* TIMER */
+    .timer-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .timer-track {
+      flex: 1;
+      height: 3px;
+      background: var(--bg3);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .timer-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: var(--coral);
+      transition: width 0.1s linear;
+      box-shadow: 0 0 6px rgba(224,90,58,0.4);
+    }
+    .timer-num { font-family: var(--mono); font-size: 13px; color: var(--coral); min-width: 32px; text-align: right; }
+
+    /* CONTROLS */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--text2);
+      font-size: 13px;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+    .btn:hover { border-color: var(--border2); background: #222630; color: var(--text); }
+    .btn:active { transform: scale(0.97); }
+    .btn.primary {
+      background: var(--green);
+      color: #0d0f12;
+      border-color: var(--green);
+      font-weight: 600;
+      box-shadow: 0 0 16px var(--green-glow);
+    }
+    .btn.primary:hover { background: #22d689; box-shadow: 0 0 24px var(--green-glow); }
+    .btn.recording {
+      background: var(--coral-dim);
+      color: var(--coral);
+      border-color: var(--coral);
+      animation: pulse-rec 1.4s ease-in-out infinite;
+    }
+    .btn.danger { background: var(--coral-dim); color: var(--coral); border-color: rgba(224,90,58,0.3); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+    @keyframes pulse-rec {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(224,90,58,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(224,90,58,0); }
+    }
+
+    .speed-group {
+      display: flex;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .speed-opt {
+      padding: 8px 12px;
+      font-size: 12px;
+      font-family: var(--font);
+      cursor: pointer;
+      color: var(--text3);
+      background: var(--bg3);
+      border: none;
+      border-right: 1px solid var(--border);
+      transition: all 0.15s;
+    }
+    .speed-opt:last-child { border-right: none; }
+    .speed-opt:hover { color: var(--text2); background: var(--bg3); }
+    .speed-opt.active { background: var(--green-dim); color: var(--green); font-weight: 500; }
+
+    /* REPEAT DOTS */
+    .repeat-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .rep-label { font-size: 12px; color: var(--text3); }
+    .rep-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      transition: all 0.2s;
+    }
+    .rep-dot.done { background: var(--green); border-color: var(--green); box-shadow: 0 0 6px var(--green-glow); }
+
+    /* SCORE PANEL */
+    .score-panel {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-top: 14px;
+      animation: fadeUp 0.3s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 9px;
+    }
+    .score-row:last-of-type { margin-bottom: 0; }
+    .s-label { font-size: 12px; color: var(--text3); min-width: 72px; }
+    .s-track { flex: 1; height: 4px; background: var(--bg); border-radius: 10px; overflow: hidden; }
+    .s-fill { height: 100%; border-radius: 10px; transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
+    .sf-green { background: var(--green); box-shadow: 0 0 6px var(--green-glow); }
+    .sf-blue { background: var(--blue); }
+    .sf-amber { background: var(--amber); }
+    .s-val { font-size: 12px; font-family: var(--mono); color: var(--text2); min-width: 34px; text-align: right; }
+    .score-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .score-total-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .score-total-label { font-size: 13px; color: var(--text2); }
+    .score-total-num { font-size: 28px; font-weight: 600; letter-spacing: -1px; }
+    .score-total-num.high { color: var(--green); }
+    .score-total-num.mid { color: var(--amber); }
+    .score-total-num.low { color: var(--coral); }
+    .score-fb {
+      font-size: 12px;
+      margin-top: 10px;
+      padding: 9px 12px;
+      border-radius: 6px;
+      line-height: 1.5;
+    }
+    .fb-pass { background: var(--green-dim); color: var(--green); border: 1px solid rgba(29,185,122,0.2); }
+    .fb-ok { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(240,160,32,0.2); }
+    .fb-retry { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(224,90,58,0.2); }
+
+    /* AI LOADING */
+    .ai-loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      font-size: 13px;
+      color: var(--text3);
+    }
+    .spinner {
+      width: 15px; height: 15px;
+      border: 2px solid var(--border2);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* NAV BUTTONS */
+    .nav-btns {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+    }
+    .sentence-counter {
+      font-size: 12px;
+      color: var(--text3);
+      font-family: var(--mono);
+    }
+
+    /* LEVEL MAP */
+    .level-map { display: flex; flex-direction: column; gap: 12px; }
+    .level-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .level-card:hover:not(.locked) { border-color: var(--border2); transform: translateY(-1px); }
+    .level-card.current { border-color: var(--green); }
+    .level-card.current::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+    }
+    .level-card.locked { opacity: 0.4; cursor: not-allowed; }
+    .lc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .lc-status { font-size: 11px; color: var(--text3); }
+    .lc-title { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+    .lc-desc { font-size: 12px; color: var(--text2); line-height: 1.55; }
+    .lc-stats { display: flex; gap: 18px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .lc-stat { font-size: 12px; color: var(--text3); }
+    .lc-stat strong { color: var(--text2); font-weight: 500; }
+    .lc-bar-track { height: 3px; background: var(--bg3); border-radius: 10px; margin-top: 8px; overflow: hidden; }
+    .lc-bar-fill { height: 100%; border-radius: 10px; background: var(--green); transition: width 0.6s ease; }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .stat-block {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+    .stat-block-label { font-size: 11px; color: var(--text3); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-block-val { font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: -1px; }
+    .stat-block-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .history-section-title { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .history-list { display: flex; flex-direction: column; gap: 6px; }
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .h-score { font-size: 14px; font-weight: 600; font-family: var(--mono); min-width: 36px; }
+    .h-score.high { color: var(--green); }
+    .h-score.mid { color: var(--amber); }
+    .h-score.low { color: var(--coral); }
+    .h-text { font-size: 12px; color: var(--text3); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .h-pill {
+      font-size: 10px; padding: 2px 8px; border-radius: 10px; white-space: nowrap;
+    }
+    .empty-state { text-align: center; padding: 48px 0; color: var(--text3); font-size: 14px; }
+
+    /* SETTINGS MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 28px;
+      width: 440px;
+      max-width: 95vw;
+      animation: fadeUp 0.2s ease;
+    }
+    .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--text3); margin-bottom: 20px; line-height: 1.5; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 12px; color: var(--text3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .field input, .field select {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--green); }
+    .field select option { background: var(--bg2); }
+    .field-hint { font-size: 11px; color: var(--text3); margin-top: 5px; line-height: 1.4; }
+    .tts-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: all 0.15s;
+    }
+    .tts-option:hover { border-color: var(--border2); }
+    .tts-option.selected { border-color: var(--green); background: var(--green-dim); }
+    .tts-option input[type=radio] { accent-color: var(--green); }
+    .tts-opt-label { font-size: 13px; font-weight: 500; }
+    .tts-opt-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+    /* PLAYING ANIMATION */
+    .playing-indicator {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+      margin-left: 8px;
+    }
+    .pi-bar {
+      width: 3px;
+      background: var(--green);
+      border-radius: 2px;
+      animation: pi-bounce 0.8s ease-in-out infinite;
+    }
+    .pi-bar:nth-child(2) { animation-delay: 0.15s; }
+    .pi-bar:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes pi-bounce {
+      0%, 100% { height: 4px; }
+      50% { height: 12px; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      font-size: 13px;
+      color: var(--text2);
+      z-index: 300;
+      opacity: 0;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 480px) {
+      header { padding: 14px 16px; }
+      main { padding: 16px; }
+      .sentence-text { font-size: 17px; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-mark">P</div>
+      <div>
+        <div class="logo-name">PTEFlow</div>
+        <div class="logo-sub">shadowing trainer</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="target-badge">목표 72점</div>
+      <button class="settings-btn" onclick="openSettings()" title="설정">⚙</button>
+    </div>
+  </header>
+
+  <!-- LEVEL PROGRESS -->
+  <div class="level-bar">
+    <span class="lv-badge lv1" id="lv-badge">Lv.1 기초</span>
+    <div class="bar-track">
+      <div class="bar-fill" id="bar-fill" style="width:0%"></div>
+    </div>
+    <span class="bar-label" id="bar-label">0 / 10</span>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <button class="nav-tab active" data-tab="train" onclick="switchTab('train')">훈련</button>
+    <button class="nav-tab" data-tab="levels" onclick="switchTab('levels')">레벨맵</button>
+    <button class="nav-tab" data-tab="stats" onclick="switchTab('stats')">내 기록</button>
+  </nav>
+
+  <main id="main"></main>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal" onclick="closeSettingsOutside(event)">
+  <div class="modal">
+    <div class="modal-title">TTS 설정</div>
+    <div class="modal-sub">문장 재생 방식을 선택하세요. ElevenLabs는 원어민 수준 발음을 제공합니다.</div>
+
+    <div>
+      <label class="tts-option selected" id="opt-browser" onclick="selectTts('browser')">
+        <input type="radio" name="tts" value="browser" checked />
+        <div>
+          <div class="tts-opt-label">브라우저 내장 TTS</div>
+          <div class="tts-opt-sub">무료 · API 키 불필요 · 품질 보통</div>
+        </div>
+      </label>
+      <label class="tts-option" id="opt-elevenlabs" onclick="selectTts('elevenlabs')">
+        <input type="radio" name="tts" value="elevenlabs" />
+        <div>
+          <div class="tts-opt-label">ElevenLabs API</div>
+          <div class="tts-opt-sub">고품질 원어민 발음 · API 키 필요 (무료 플랜 가능)</div>
+        </div>
+      </label>
+      <label class="tts-option" id="opt-openai" onclick="selectTts('openai')">
+        <input type="radio" name="tts" value="openai" />
+        <div>
+          <div class="tts-opt-label">OpenAI TTS</div>
+          <div class="tts-opt-sub">자연스러운 발음 · API 키 필요 (gpt-4o-mini-tts)</div>
+        </div>
+      </label>
+    </div>
+
+    <div class="field" id="el-key-field" style="display:none; margin-top:14px;">
+      <label>ElevenLabs API Key</label>
+      <input type="password" id="el-api-key" placeholder="sk_..." />
+      <div class="field-hint">
+        <a href="https://elevenlabs.io" target="_blank" style="color:var(--green)">elevenlabs.io</a>에서 무료로 발급 가능. 월 10,000자 무료.
+      </div>
+    </div>
+    <div class="field" id="el-voice-field" style="display:none;">
+      <label>목소리</label>
+      <select id="el-voice">
+        <option value="21m00Tcm4TlvDq8ikWAM">Rachel (여성, 자연스러움)</option>
+        <option value="AZnzlk1XvdvUeBnXmlld">Domi (여성, 활기찬)</option>
+        <option value="EXAVITQu4vr4xnSDxMaL">Bella (여성, 부드러움)</option>
+        <option value="ErXwobaYiN019PkySvjV">Antoni (남성, 명확함)</option>
+        <option value="VR6AewLTigWG4xSOukaG">Arnold (남성, 강함)</option>
+        <option value="pNInz6obpgDQGcFmaJgB">Adam (남성, 내레이션)</option>
+      </select>
+    </div>
+
+    <div class="field" id="oai-key-field" style="display:none; margin-top:14px;">
+      <label>OpenAI API Key</label>
+      <input type="password" id="oai-api-key" placeholder="sk-..." />
+      <div class="field-hint">
+        <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--green)">platform.openai.com</a>에서 발급.
+      </div>
+    </div>
+    <div class="field" id="oai-voice-field" style="display:none;">
+      <label>목소리</label>
+      <select id="oai-voice">
+        <option value="alloy">Alloy (중성적)</option>
+        <option value="echo">Echo (남성)</option>
+        <option value="fable">Fable (영국식)</option>
+        <option value="onyx">Onyx (남성, 낮음)</option>
+        <option value="nova" selected>Nova (여성, 자연스러움)</option>
+        <option value="shimmer">Shimmer (여성, 밝음)</option>
+      </select>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn" onclick="closeSettings()">취소</button>
+      <button class="btn primary" onclick="saveSettings()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── CURRICULUM DATA ─────────────────────────────────── */
+const CURRICULUM = [
+  {
+    level: 1, name: "기초 자동화", goal: "입 트이기", type: "shadow",
+    badge: "Lv.1 기초", badgeClass: "lv1",
+    desc: "짧은 문장 쉐도잉으로 입을 트는 단계. 0.75x 속도로 시작해 1.0x까지 올리세요.",
+    sentences: [
+      { text: "I go to work every day.", phonetic: "아이 고우 투 워크 에브리 데이", type: "shadow" },
+      { text: "She is reading a book right now.", phonetic: "쉬 이즈 리딩 어 북 라잇 나우", type: "shadow" },
+      { text: "They moved to a new city last year.", phonetic: "데이 무브드 투 어 뉴 시티 라스트 이어", type: "shadow" },
+      { text: "We need to finish this report soon.", phonetic: "위 니드 투 피니쉬 디스 리포트 순", type: "shadow" },
+      { text: "He always arrives early in the morning.", phonetic: "히 올웨이즈 어라이브즈 얼리 인 더 모닝", type: "shadow" },
+      { text: "The children are playing in the park.", phonetic: "더 칠드런 아 플레잉 인 더 파크", type: "shadow" },
+      { text: "I usually drink coffee before breakfast.", phonetic: "아이 유절리 드링크 커피 비포 브렉퍼스트", type: "shadow" },
+      { text: "She called me three times yesterday.", phonetic: "쉬 콜드 미 쓰리 타임즈 예스터데이", type: "shadow" },
+      { text: "The weather is getting colder this week.", phonetic: "더 웨더 이즈 게팅 콜더 디스 위크", type: "shadow" },
+      { text: "We should leave early to avoid traffic.", phonetic: "위 슈드 리브 얼리 투 어보이드 트래픽", type: "shadow" },
+    ]
+  },
+  {
+    level: 2, name: "정확도 강화", goal: "Repeat Sentence 대비", type: "repeat",
+    badge: "Lv.2 정확도", badgeClass: "lv2",
+    desc: "한 번만 듣고 즉시 따라 말하는 훈련. 텍스트는 채점 후 공개됩니다.",
+    sentences: [
+      { text: "The government should invest more in public transportation.", phonetic: "더 거번먼트 슈드 인베스트 모어 인 퍼블릭 트랜스포테이션", type: "repeat" },
+      { text: "Research suggests that regular exercise improves mental health significantly.", phonetic: "", type: "repeat" },
+      { text: "Students are required to submit their assignments by Friday.", phonetic: "", type: "repeat" },
+      { text: "The company announced a major restructuring plan last week.", phonetic: "", type: "repeat" },
+      { text: "Climate change poses serious risks to global biodiversity.", phonetic: "", type: "repeat" },
+      { text: "The professor explained the concept of quantum mechanics clearly.", phonetic: "", type: "repeat" },
+      { text: "Economic inequality has widened considerably over the past decade.", phonetic: "", type: "repeat" },
+      { text: "The library offers free access to thousands of digital resources.", phonetic: "", type: "repeat" },
+      { text: "Advances in technology have transformed the way we communicate.", phonetic: "", type: "repeat" },
+      { text: "The local government has approved funding for new infrastructure projects.", phonetic: "", type: "repeat" },
+    ]
+  },
+  {
+    level: 3, name: "PTE 핵심 유형", goal: "실제 시험 대응", type: "mixed",
+    badge: "Lv.3 핵심", badgeClass: "lv3",
+    desc: "Repeat Sentence, Describe Image, Retell Lecture 실전 유형 훈련.",
+    sentences: [
+      { text: "Despite significant progress in renewable energy adoption, fossil fuels continue to dominate the global energy market.", type: "repeat" },
+      { text: "The rapid urbanization of developing countries has created both opportunities and unprecedented environmental challenges.", type: "repeat" },
+      { text: "Scientists have discovered that the gut microbiome plays a crucial role in regulating immune system responses.", type: "repeat" },
+      { text: "The graph shows a steady increase in global temperatures over the past fifty years, with the most dramatic rise occurring after 1990.", type: "describe",
+        template: "The graph illustrates [trend]. The most notable feature is [peak/highlight]. Overall, [conclusion]." },
+      { text: "According to recent studies, bilingual individuals demonstrate enhanced cognitive flexibility and may delay the onset of dementia.", type: "repeat" },
+      { text: "The pie chart indicates that the service sector accounts for the largest proportion, followed by manufacturing and agriculture.", type: "describe",
+        template: "The pie chart shows [data]. The dominant category is [largest]. In contrast, [smallest] represents the smallest share." },
+      { text: "Artificial intelligence is increasingly being integrated into medical diagnosis, raising questions about data privacy and clinical accountability.", type: "repeat" },
+      { text: "The lecture discusses how ancient trade routes facilitated not only economic exchange but also the spread of cultural and religious ideas.", type: "retell",
+        template: "The lecture covers [topic]. The speaker explains that [key point 1]. Furthermore, [key point 2]. In conclusion, [main argument]." },
+      { text: "Urban heat islands form when natural land cover is replaced by dense concentrations of pavement, buildings, and other surfaces that absorb and retain heat.", type: "repeat" },
+      { text: "The diagram illustrates the water cycle, showing how evaporation, condensation, and precipitation interact in a continuous process.", type: "describe",
+        template: "The diagram depicts [subject]. The process begins with [step 1], followed by [step 2]. The cycle concludes when [final step]." },
+    ]
+  },
+  {
+    level: 4, name: "시험 모드", goal: "실전 점수 72", type: "exam",
+    badge: "Lv.4 실전", badgeClass: "lv4",
+    desc: "시간 제한 실전 모드. PTE 실제 시험 형식으로 훈련합니다.",
+    sentences: [
+      { text: "The correlation between socioeconomic status and educational achievement remains one of the most persistent challenges facing contemporary education systems.", type: "repeat", timeLimit: 15 },
+      { text: "Neuroplasticity refers to the brain's ability to reorganize itself by forming new neural connections throughout life in response to learning and experience.", type: "repeat", timeLimit: 15 },
+      { text: "The bar chart compares energy consumption across five sectors, with transportation and residential use showing the highest levels.", type: "describe", timeLimit: 40,
+        template: "The bar chart compares [categories]. [Highest] consumes the most energy. Conversely, [lowest] shows minimum consumption. Overall, [trend]." },
+      { text: "Globalisation has accelerated the flow of capital, goods, services, and people across borders, fundamentally reshaping national economies and cultural identities.", type: "repeat", timeLimit: 15 },
+      { text: "The researcher argues that confirmation bias significantly undermines the objectivity of scientific inquiry, particularly when funding sources have vested interests.", type: "repeat", timeLimit: 15 },
+      { text: "Recent archaeological findings suggest that early human migration patterns were far more complex and interconnected than previously assumed by mainstream scholars.", type: "repeat", timeLimit: 15 },
+      { text: "The flowchart outlines the legislative process, beginning with bill introduction and culminating in presidential assent or veto.", type: "describe", timeLimit: 40,
+        template: "The flowchart illustrates [process]. It begins with [step 1] and proceeds through [key stages]. The final outcome is [conclusion]." },
+      { text: "Quantum computing leverages the principles of superposition and entanglement to perform calculations that would be infeasible for classical computers.", type: "repeat", timeLimit: 15 },
+      { text: "The line graph tracks unemployment rates across three countries over a decade, revealing divergent recovery trajectories following the 2008 financial crisis.", type: "describe", timeLimit: 40,
+        template: "The line graph tracks [subject] over [period]. [Country A] shows [trend], while [Country B] demonstrates [contrast]. Overall, [observation]." },
+      { text: "Epigenetics demonstrates that environmental factors can influence gene expression without altering the underlying DNA sequence, challenging deterministic views of heredity.", type: "repeat", timeLimit: 15 },
+    ]
+  }
+];
+
+const TYPE_LABEL = { shadow: "쉐도잉", repeat: "Repeat Sentence", describe: "Describe Image", retell: "Retell Lecture" };
+const TYPE_PILL = { shadow: "pill-shadow", repeat: "pill-repeat", describe: "pill-describe", retell: "pill-retell" };
+const TYPE_HISTORY_PILL = { shadow: "pill-shadow", repeat: "pill-repeat", describe: "pill-describe", retell: "pill-retell" };
+
+/* ─── STATE ───────────────────────────────────────────── */
+let S = {
+  tab: "train",
+  lvl: 0,
+  idx: 0,
+  speed: 1.0,
+  reps: 0,
+  playing: false,
+  recording: false,
+  aiLoading: false,
+  showScore: false,
+  score: null,
+  textRevealed: false,
+  history: [],
+  progress: [0, 0, 0, 0],
+  tts: localStorage.getItem("pte_tts") || "browser",
+  elKey: localStorage.getItem("pte_el_key") || "",
+  elVoice: localStorage.getItem("pte_el_voice") || "21m00Tcm4TlvDq8ikWAM",
+  oaiKey: localStorage.getItem("pte_oai_key") || "",
+  oaiVoice: localStorage.getItem("pte_oai_voice") || "nova",
+  timerVal: 0,
+  timerMax: 15,
+  timerInterval: null,
+  audioCtx: null,
+  currentAudio: null,
+};
+
+function sentence() { return CURRICULUM[S.lvl].sentences[S.idx]; }
+function lvlData() { return CURRICULUM[S.lvl]; }
+function isUnlocked(i) {
+  return i === 0 || S.progress[i-1] >= 7;
+}
+
+/* ─── TTS ENGINE ──────────────────────────────────────── */
+async function playTTS(text) {
+  if (S.playing) return;
+  S.playing = true;
+  render();
+
+  try {
+    if (S.tts === "elevenlabs" && S.elKey) {
+      await playElevenLabs(text);
+    } else if (S.tts === "openai" && S.oaiKey) {
+      await playOpenAI(text);
+    } else {
+      await playBrowser(text);
+    }
+  } catch (e) {
+    console.error("TTS error:", e);
+    showToast("재생 오류: " + e.message);
+    // fallback to browser
+    if (S.tts !== "browser") {
+      await playBrowser(text);
+    }
+  }
+
+  S.playing = false;
+  render();
+}
+
+function playBrowser(text) {
+  return new Promise((resolve, reject) => {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = "en-US";
+    utt.rate = S.speed;
+    utt.pitch = 1.0;
+    // try to find a high-quality English voice
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v =>
+      v.lang.startsWith("en") && (v.name.includes("Google") || v.name.includes("Samantha") || v.name.includes("Karen") || v.name.includes("Daniel"))
+    ) || voices.find(v => v.lang.startsWith("en-US")) || voices.find(v => v.lang.startsWith("en"));
+    if (preferred) utt.voice = preferred;
+    utt.onend = resolve;
+    utt.onerror = reject;
+    window.speechSynthesis.speak(utt);
+  });
+}
+
+async function playElevenLabs(text) {
+  const voiceId = S.elVoice;
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, {
+    method: "POST",
+    headers: {
+      "xi-api-key": S.elKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      text,
+      model_id: "eleven_turbo_v2_5",
+      voice_settings: {
+        stability: 0.5,
+        similarity_boost: 0.75,
+        style: 0.0,
+        use_speaker_boost: true,
+      }
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.detail?.message || `ElevenLabs error ${resp.status}`);
+  }
+  const blob = await resp.blob();
+  await playAudioBlob(blob);
+}
+
+async function playOpenAI(text) {
+  const resp = await fetch("https://api.openai.com/v1/audio/speech", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + S.oaiKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini-tts",
+      input: text,
+      voice: S.oaiVoice,
+      speed: S.speed,
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.error?.message || `OpenAI error ${resp.status}`);
+  }
+  const blob = await resp.blob();
+  await playAudioBlob(blob);
+}
+
+function playAudioBlob(blob) {
+  return new Promise((resolve, reject) => {
+    if (S.currentAudio) {
+      S.currentAudio.pause();
+      S.currentAudio = null;
+    }
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.playbackRate = S.tts === "openai" ? 1.0 : S.speed; // openai handles speed server-side
+    S.currentAudio = audio;
+    audio.onended = () => { URL.revokeObjectURL(url); resolve(); };
+    audio.onerror = reject;
+    audio.play();
+  });
+}
+
+/* ─── TIMER ───────────────────────────────────────────── */
+function startTimer(max) {
+  S.timerMax = max;
+  S.timerVal = 0;
+  clearInterval(S.timerInterval);
+  S.timerInterval = setInterval(() => {
+    S.timerVal += 0.1;
+    const fill = document.getElementById("timer-fill");
+    const num = document.getElementById("timer-num");
+    if (fill) fill.style.width = Math.min(100, (S.timerVal / S.timerMax) * 100) + "%";
+    if (num) num.textContent = Math.max(0, Math.ceil(S.timerMax - S.timerVal)) + "s";
+    if (S.timerVal >= S.timerMax && S.recording) {
+      stopTimer();
+      toggleRecord();
+    }
+  }, 100);
+}
+function stopTimer() {
+  clearInterval(S.timerInterval);
+  S.timerVal = 0;
+}
+
+/* ─── MOCK AI SCORING ─────────────────────────────────── */
+function simulateScore() {
+  S.aiLoading = true;
+  render();
+  setTimeout(() => {
+    const base = 58 + Math.floor(Math.random() * 38);
+    const accuracy = Math.max(50, Math.min(99, base + (Math.random() > 0.5 ? 5 : -5)));
+    const fluency = Math.max(50, Math.min(99, base + (Math.random() > 0.5 ? 3 : -8)));
+    const wpm = 90 + Math.floor(Math.random() * 90);
+    const total = Math.round(accuracy * 0.4 + fluency * 0.4 + Math.min(100, (wpm / 150) * 100) * 0.2);
+    S.score = { accuracy, fluency, wpm, total };
+    S.aiLoading = false;
+    S.showScore = true;
+    S.textRevealed = true;
+
+    const s = sentence();
+    S.history.push({ score: total, text: s.text.substring(0, 50) + (s.text.length > 50 ? "…" : ""), type: s.type });
+
+    if (total >= 60) {
+      const done = S.progress[S.lvl];
+      if (S.idx + 1 > done) S.progress[S.lvl] = Math.min(S.idx + 1, lvlData().sentences.length);
+    }
+    render();
+  }, 1800);
+}
+
+/* ─── ACTIONS ─────────────────────────────────────────── */
+function onPlay() {
+  const s = sentence();
+  if (s.type === "repeat" || s.type === "retell") S.textRevealed = false;
+  playTTS(s.text);
+}
+
+function toggleRecord() {
+  if (S.recording) {
+    S.recording = false;
+    stopTimer();
+    simulateScore();
+    if (sentence().type === "shadow") S.reps = Math.min(S.reps + 1, 5);
+  } else {
+    S.recording = true;
+    S.showScore = false;
+    S.score = null;
+    const s = sentence();
+    if (s.timeLimit) startTimer(s.timeLimit);
+    render();
+  }
+}
+
+function setSpeed(v) { S.speed = v; render(); }
+
+function nextSentence() {
+  const total = lvlData().sentences.length;
+  if (S.idx < total - 1) {
+    S.idx++;
+  } else {
+    if (S.progress[S.lvl] >= 7 && S.lvl < 3) {
+      S.lvl++;
+      S.idx = 0;
+      showToast("🎉 레벨 업! " + lvlData().name + " 시작");
+    } else {
+      S.idx = 0;
+    }
+  }
+  resetSentence();
+}
+
+function prevSentence() {
+  if (S.idx > 0) { S.idx--; resetSentence(); }
+}
+
+function resetSentence() {
+  S.showScore = false;
+  S.score = null;
+  S.reps = 0;
+  S.playing = false;
+  S.recording = false;
+  S.aiLoading = false;
+  S.textRevealed = false;
+  stopTimer();
+  if (S.currentAudio) { S.currentAudio.pause(); S.currentAudio = null; }
+  window.speechSynthesis?.cancel();
+  render();
+}
+
+function goToLevel(i) {
+  if (!isUnlocked(i)) return;
+  S.lvl = i; S.idx = 0;
+  resetSentence();
+  switchTab("train");
+}
+
+function switchTab(tab) {
+  S.tab = tab;
+  document.querySelectorAll(".nav-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.tab === tab);
+  });
+  render();
+}
+
+/* ─── SETTINGS ────────────────────────────────────────── */
+function openSettings() {
+  document.getElementById("settings-modal").classList.add("open");
+  document.getElementById("el-api-key").value = S.elKey;
+  document.getElementById("el-voice").value = S.elVoice;
+  document.getElementById("oai-api-key").value = S.oaiKey;
+  document.getElementById("oai-voice").value = S.oaiVoice;
+  selectTts(S.tts);
+}
+function closeSettings() {
+  document.getElementById("settings-modal").classList.remove("open");
+}
+function closeSettingsOutside(e) {
+  if (e.target === document.getElementById("settings-modal")) closeSettings();
+}
+function selectTts(val) {
+  document.querySelectorAll(".tts-option").forEach(el => el.classList.remove("selected"));
+  document.getElementById("opt-" + val)?.classList.add("selected");
+  document.querySelector(`.tts-option input[value="${val}"]`).checked = true;
+  document.getElementById("el-key-field").style.display = val === "elevenlabs" ? "block" : "none";
+  document.getElementById("el-voice-field").style.display = val === "elevenlabs" ? "block" : "none";
+  document.getElementById("oai-key-field").style.display = val === "openai" ? "block" : "none";
+  document.getElementById("oai-voice-field").style.display = val === "openai" ? "block" : "none";
+  S.tts = val;
+}
+function saveSettings() {
+  S.elKey = document.getElementById("el-api-key").value.trim();
+  S.elVoice = document.getElementById("el-voice").value;
+  S.oaiKey = document.getElementById("oai-api-key").value.trim();
+  S.oaiVoice = document.getElementById("oai-voice").value;
+  localStorage.setItem("pte_tts", S.tts);
+  localStorage.setItem("pte_el_key", S.elKey);
+  localStorage.setItem("pte_el_voice", S.elVoice);
+  localStorage.setItem("pte_oai_key", S.oaiKey);
+  localStorage.setItem("pte_oai_voice", S.oaiVoice);
+  closeSettings();
+  showToast("설정 저장 완료");
+}
+
+/* ─── TOAST ───────────────────────────────────────────── */
+let toastTimeout;
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+/* ─── RENDER ──────────────────────────────────────────── */
+function updateLevelBar() {
+  const ld = lvlData();
+  const done = S.progress[S.lvl];
+  const total = ld.sentences.length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById("bar-fill").style.width = pct + "%";
+  document.getElementById("bar-label").textContent = done + " / " + total;
+  const badge = document.getElementById("lv-badge");
+  badge.textContent = ld.badge;
+  badge.className = "lv-badge " + ld.badgeClass;
+}
+
+function render() {
+  const el = document.getElementById("main");
+  if (S.tab === "train") el.innerHTML = renderTrain();
+  else if (S.tab === "levels") el.innerHTML = renderLevels();
+  else el.innerHTML = renderStats();
+  updateLevelBar();
+}
+
+function renderTrain() {
+  const ld = lvlData();
+  const s = sentence();
+  const isRepeatType = s.type === "repeat" || s.type === "retell";
+  const isExam = ld.type === "exam";
+  const requiredReps = s.type === "shadow" ? 5 : 1;
+
+  // Type pill
+  const pillClass = TYPE_PILL[s.type] || "pill-shadow";
+  const pillLabel = TYPE_LABEL[s.type] || "쉐도잉";
+
+  // Sentence text - blur for repeat types before heard
+  const blurred = isRepeatType && !S.textRevealed && !S.showScore && !S.aiLoading;
+
+  // Speed controls
+  let speedHtml = "";
+  if (s.type === "shadow") {
+    speedHtml = `<div class="speed-group">
+      ${[0.75, 1.0, 1.25].map(v => `<button class="speed-opt${S.speed===v?" active":""}" onclick="setSpeed(${v})">${v}x</button>`).join("")}
+    </div>`;
+  }
+
+  // Timer (exam only)
+  let timerHtml = "";
+  if (isExam && s.timeLimit) {
+    const pct = Math.round((S.timerVal / S.timerMax) * 100);
+    const remaining = Math.max(0, Math.ceil(S.timerMax - S.timerVal));
+    timerHtml = `<div class="timer-row">
+      <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:${pct}%"></div></div>
+      <div class="timer-num" id="timer-num">${remaining}s</div>
+    </div>`;
+  }
+
+  // Template hint
+  let templateHtml = "";
+  if (s.template && (S.showScore || S.recording || s.type === "describe")) {
+    templateHtml = `<div class="template-hint"><strong>템플릿</strong> — ${s.template}</div>`;
+  }
+
+  // Phonetic
+  let phoneticHtml = s.phonetic ? `<div class="phonetic">${s.phonetic}</div>` : "";
+
+  // Repeat hint
+  let repeatHint = isRepeatType && !S.textRevealed
+    ? `<div class="sentence-meta">먼저 재생 버튼으로 들으세요. 텍스트는 채점 후 공개됩니다.</div>` : "";
+
+  // Dots
+  let dotsHtml = "";
+  if (s.type === "shadow") {
+    dotsHtml = `<div class="repeat-row">
+      <span class="rep-label">반복</span>
+      ${Array.from({length: requiredReps}, (_,i) =>
+        `<div class="rep-dot${i < S.reps ? " done" : ""}"></div>`
+      ).join("")}
+    </div>`;
+  }
+
+  // Record button
+  const recLabel = S.recording ? "■ 중지" : (isRepeatType ? "말하기" : "● 녹음");
+  const recClass = S.recording ? "btn recording" : "btn";
+
+  // Play button
+  const playLabel = S.playing
+    ? `재생 중<span class="playing-indicator"><span class="pi-bar"></span><span class="pi-bar"></span><span class="pi-bar"></span></span>`
+    : "▶ 재생";
+
+  // Score panel
+  let scoreHtml = "";
+  if (S.aiLoading) {
+    scoreHtml = `<div class="ai-loading"><div class="spinner"></div><span>AI 채점 중...</span></div>`;
+  } else if (S.showScore && S.score) {
+    const sc = S.score;
+    const totClass = sc.total >= 80 ? "high" : sc.total >= 60 ? "mid" : "low";
+    const fbClass = sc.total >= 80 ? "fb-pass" : sc.total >= 60 ? "fb-ok" : "fb-retry";
+    const fbMsg = sc.total >= 80
+      ? "훌륭해요! 이 속도면 PTE 72 충분히 달성 가능합니다."
+      : sc.total >= 60
+      ? "괜찮아요! 조금 더 반복하면 올라갑니다."
+      : "다시 도전해보세요. 들으면서 입 모양까지 따라해보세요.";
+    scoreHtml = `<div class="score-panel">
+      <div class="score-row"><span class="s-label">정확도</span><div class="s-track"><div class="s-fill sf-green" style="width:${sc.accuracy}%"></div></div><span class="s-val">${sc.accuracy}%</span></div>
+      <div class="score-row"><span class="s-label">유창성</span><div class="s-track"><div class="s-fill sf-blue" style="width:${sc.fluency}%"></div></div><span class="s-val">${sc.fluency}%</span></div>
+      <div class="score-row"><span class="s-label">속도 (WPM)</span><div class="s-track"><div class="s-fill sf-amber" style="width:${Math.min(100,Math.round(sc.wpm/200*100))}%"></div></div><span class="s-val">${sc.wpm}</span></div>
+      <hr class="score-divider" />
+      <div class="score-total-row">
+        <span class="score-total-label">종합 점수</span>
+        <span class="score-total-num ${totClass}">${sc.total}</span>
+      </div>
+      <div class="score-fb ${fbClass}">${fbMsg}</div>
+    </div>`;
+  }
+
+  const canRecord = !S.playing && !S.aiLoading;
+
+  return `
+    <div class="sentence-card">
+      <div class="type-row">
+        <span class="type-pill ${pillClass}">${pillLabel}</span>
+        <span class="wpm-label">${ld.name}</span>
+      </div>
+      ${repeatHint}
+      <div class="sentence-text${blurred ? " blurred" : ""}">${s.text}</div>
+      ${phoneticHtml}
+      ${timerHtml}
+      ${templateHtml}
+      <div class="controls">
+        <button class="btn primary" onclick="onPlay()" ${S.playing ? "disabled" : ""}>${playLabel}</button>
+        <button class="${recClass}" onclick="toggleRecord()" ${!canRecord && !S.recording ? "disabled" : ""}>${recLabel}</button>
+        ${speedHtml}
+      </div>
+      ${dotsHtml}
+      ${scoreHtml}
+    </div>
+    <div class="nav-btns">
+      <button class="btn" onclick="prevSentence()" ${S.idx === 0 ? "disabled" : ""}>← 이전</button>
+      <span class="sentence-counter">${S.idx + 1} / ${ld.sentences.length}</span>
+      <button class="btn${S.showScore && S.score && S.score.total >= 60 ? " primary" : ""}" onclick="nextSentence()">다음 →</button>
+    </div>`;
+}
+
+function renderLevels() {
+  const goals = [
+    "짧은 문장 쉐도잉으로 입을 트는 단계. 0.75x → 1.0x로 속도를 올리며 훈련합니다.",
+    "한 번만 듣고 즉시 따라 말하기. Repeat Sentence 유형 집중 대비입니다.",
+    "RS / Describe Image / Retell Lecture 실전 유형을 템플릿과 함께 훈련합니다.",
+    "시간 제한 실전 모드. 실제 PTE 시험 조건에서 훈련합니다."
+  ];
+  const types = ["쉐도잉 집중", "즉시 말하기 출력", "RS + DI + RL", "Full Exam Simulation"];
+  return `<div class="level-map">
+    ${CURRICULUM.map((ld, i) => {
+      const unlocked = isUnlocked(i);
+      const isCurrent = i === S.lvl;
+      const done = S.progress[i];
+      const total = ld.sentences.length;
+      const pct = Math.round((done / total) * 100);
+      const statusLabel = isCurrent ? "현재 레벨" : !unlocked ? "🔒 잠김" : "✓ 진행중";
+      return `<div class="level-card${isCurrent ? " current" : ""}${!unlocked ? " locked" : ""}" onclick="goToLevel(${i})">
+        <div class="lc-header">
+          <span class="lv-badge ${ld.badgeClass}">Level ${i+1}</span>
+          <span class="lc-status">${statusLabel}</span>
+        </div>
+        <div class="lc-title">${ld.name}</div>
+        <div class="lc-desc">${goals[i]}</div>
+        <div class="lc-stats">
+          <span class="lc-stat"><strong>${done}</strong> / ${total} 완료</span>
+          <span class="lc-stat"><strong>${pct}%</strong> 진행</span>
+          <span class="lc-stat">${types[i]}</span>
+        </div>
+        <div class="lc-bar-track"><div class="lc-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join("")}
+  </div>`;
+}
+
+function renderStats() {
+  const total = S.history.length;
+  const avg = total ? Math.round(S.history.reduce((a,b) => a + b.score, 0) / total) : 0;
+  const best = total ? Math.max(...S.history.map(h => h.score)) : 0;
+  const allDone = S.progress.reduce((a,b) => a+b, 0);
+  return `
+    <div class="stats-grid">
+      <div class="stat-block"><div class="stat-block-label">총 훈련</div><div class="stat-block-val">${total}</div><div class="stat-block-sub">회</div></div>
+      <div class="stat-block"><div class="stat-block-label">평균 점수</div><div class="stat-block-val">${avg || "—"}</div><div class="stat-block-sub">점</div></div>
+      <div class="stat-block"><div class="stat-block-label">최고 점수</div><div class="stat-block-val">${best || "—"}</div><div class="stat-block-sub">점</div></div>
+      <div class="stat-block"><div class="stat-block-label">완료 문장</div><div class="stat-block-val">${allDone}</div><div class="stat-block-sub">/ 40</div></div>
+    </div>
+    ${total === 0
+      ? `<div class="empty-state">아직 기록이 없어요.<br>훈련을 시작해보세요!</div>`
+      : `<div class="history-section-title">최근 기록</div>
+         <div class="history-list">
+           ${S.history.slice(-10).reverse().map(h => {
+             const cls = h.score >= 80 ? "high" : h.score >= 60 ? "mid" : "low";
+             const pillClass = TYPE_PILL[h.type] || "pill-shadow";
+             const pillLabel = TYPE_LABEL[h.type] || "shadow";
+             return `<div class="history-item">
+               <span class="h-score ${cls}">${h.score}</span>
+               <span class="h-text">${h.text}</span>
+               <span class="h-pill type-pill ${pillClass}">${pillLabel}</span>
+             </div>`;
+           }).join("")}
+         </div>`
+    }`;
+}
+
+/* ─── INIT ────────────────────────────────────────────── */
+// load voices for browser TTS
+if (window.speechSynthesis) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+render();
+</script>
+</body>
+</html>
