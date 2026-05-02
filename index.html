@@ -7,627 +7,169 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0d0f12;
-      --bg2: #13161b;
-      --bg3: #1a1e25;
-      --border: rgba(255,255,255,0.07);
-      --border2: rgba(255,255,255,0.13);
-      --text: #e8eaf0;
-      --text2: #8a8f9e;
-      --text3: #525769;
-      --green: #1DB97A;
-      --green-dim: rgba(29,185,122,0.12);
-      --green-glow: rgba(29,185,122,0.25);
-      --amber: #F0A020;
-      --amber-dim: rgba(240,160,32,0.12);
-      --coral: #E05A3A;
-      --coral-dim: rgba(224,90,58,0.12);
-      --blue: #4D9FEC;
-      --blue-dim: rgba(77,159,236,0.12);
-      --purple: #8B7FE8;
-      --purple-dim: rgba(139,127,232,0.12);
-      --radius: 12px;
-      --radius-sm: 8px;
-      --font: 'DM Sans', sans-serif;
-      --mono: 'DM Mono', monospace;
+      --bg:#0d0f12; --bg2:#13161b; --bg3:#1a1e25;
+      --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+      --text:#e8eaf0; --text2:#8a8f9e; --text3:#525769;
+      --green:#1DB97A; --green-dim:rgba(29,185,122,0.12); --green-glow:rgba(29,185,122,0.25);
+      --amber:#F0A020; --amber-dim:rgba(240,160,32,0.12);
+      --coral:#E05A3A; --coral-dim:rgba(224,90,58,0.12);
+      --blue:#4D9FEC; --blue-dim:rgba(77,159,236,0.12);
+      --purple:#8B7FE8; --purple-dim:rgba(139,127,232,0.12);
+      --radius:12px; --radius-sm:8px;
+      --font:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
     }
-
-    html { font-size: 16px; }
-    body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* SCROLLBAR */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-
-    /* LAYOUT */
-    .app {
-      max-width: 720px;
-      margin: 0 auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* HEADER */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 24px 14px;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: var(--bg);
-      z-index: 100;
-      backdrop-filter: blur(12px);
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-mark {
-      width: 34px; height: 34px;
-      background: var(--green);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 600;
-      color: #0d0f12;
-      letter-spacing: -0.5px;
-      box-shadow: 0 0 20px var(--green-glow);
-    }
-    .logo-name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
-    .logo-sub { font-size: 11px; color: var(--text3); font-weight: 400; margin-top: 1px; }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .target-badge {
-      padding: 5px 12px;
-      background: var(--green-dim);
-      border: 1px solid var(--green);
-      border-radius: 20px;
-      font-size: 12px;
-      color: var(--green);
-      font-weight: 500;
-    }
-    .settings-btn {
-      width: 32px; height: 32px;
-      border: 1px solid var(--border2);
-      border-radius: 8px;
-      background: transparent;
-      color: var(--text2);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px;
-      transition: all 0.15s;
-    }
-    .settings-btn:hover { border-color: var(--border2); background: var(--bg3); color: var(--text); }
-
-    /* LEVEL PROGRESS */
-    .level-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 24px;
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-    }
-    .lv-badge {
-      font-size: 11px; font-weight: 500;
-      padding: 3px 10px;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-    .lv1 { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(77,159,236,0.3); }
-    .lv2 { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(240,160,32,0.3); }
-    .lv3 { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(224,90,58,0.3); }
-    .lv4 { background: var(--green-dim); color: var(--green); border: 1px solid rgba(29,185,122,0.3); }
-    .bar-track {
-      flex: 1;
-      height: 4px;
-      background: var(--bg3);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .bar-fill {
-      height: 100%;
-      border-radius: 10px;
-      background: var(--green);
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 0 8px var(--green-glow);
-    }
-    .bar-label { font-size: 12px; color: var(--text3); min-width: 44px; text-align: right; font-variant-numeric: tabular-nums; }
-
-    /* NAV */
-    nav {
-      display: flex;
-      padding: 0 24px;
-      border-bottom: 1px solid var(--border);
-      gap: 0;
-    }
-    .nav-tab {
-      padding: 11px 16px;
-      font-size: 13px;
-      color: var(--text3);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.15s;
-      font-family: var(--font);
-      background: transparent;
-      border-top: none; border-left: none; border-right: none;
-      margin-bottom: -1px;
-      white-space: nowrap;
-    }
-    .nav-tab:hover { color: var(--text2); }
-    .nav-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 500; }
-
-    /* CONTENT */
-    main { flex: 1; padding: 24px; }
-
-    /* SENTENCE CARD */
-    .sentence-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 16px;
-      position: relative;
-      overflow: hidden;
-    }
-    .sentence-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--green-glow), transparent);
-    }
-    .type-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .type-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 11px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
-    }
-    .pill-shadow { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(77,159,236,0.25); }
-    .pill-repeat { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(240,160,32,0.25); }
-    .pill-describe { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(224,90,58,0.25); }
-    .pill-retell { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(139,127,232,0.25); }
-    .wpm-label { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-
-    .sentence-text {
-      font-size: 20px;
-      font-weight: 400;
-      line-height: 1.6;
-      color: var(--text);
-      margin-bottom: 8px;
-      letter-spacing: -0.2px;
-      transition: filter 0.3s ease;
-    }
-    .sentence-text.blurred { filter: blur(6px); user-select: none; }
-    .phonetic {
-      font-size: 12px;
-      color: var(--text3);
-      font-family: var(--mono);
-      margin-bottom: 6px;
-      letter-spacing: 0.2px;
-    }
-    .sentence-meta {
-      font-size: 12px;
-      color: var(--text3);
-      margin-bottom: 20px;
-    }
-
-    /* TEMPLATE HINT */
-    .template-hint {
-      background: var(--amber-dim);
-      border: 1px solid rgba(240,160,32,0.2);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 12px;
-      color: var(--amber);
-      line-height: 1.65;
-      margin-bottom: 16px;
-    }
-    .template-hint strong { font-weight: 500; }
-
-    /* AUDIO VISUALIZER */
-    .audio-vis {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      height: 32px;
-      margin-bottom: 16px;
-    }
-    .vis-bar {
-      width: 3px;
-      background: var(--green);
-      border-radius: 3px;
-      opacity: 0.4;
-      transition: height 0.08s ease;
-    }
-    .vis-bar.active { opacity: 1; }
-
-    /* TIMER */
-    .timer-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .timer-track {
-      flex: 1;
-      height: 3px;
-      background: var(--bg3);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .timer-fill {
-      height: 100%;
-      border-radius: 10px;
-      background: var(--coral);
-      transition: width 0.1s linear;
-      box-shadow: 0 0 6px rgba(224,90,58,0.4);
-    }
-    .timer-num { font-family: var(--mono); font-size: 13px; color: var(--coral); min-width: 32px; text-align: right; }
-
-    /* CONTROLS */
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 18px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border2);
-      background: var(--bg3);
-      color: var(--text2);
-      font-size: 13px;
-      font-family: var(--font);
-      cursor: pointer;
-      transition: all 0.15s;
-      font-weight: 400;
-      white-space: nowrap;
-    }
-    .btn:hover { border-color: var(--border2); background: #222630; color: var(--text); }
-    .btn:active { transform: scale(0.97); }
-    .btn.primary {
-      background: var(--green);
-      color: #0d0f12;
-      border-color: var(--green);
-      font-weight: 600;
-      box-shadow: 0 0 16px var(--green-glow);
-    }
-    .btn.primary:hover { background: #22d689; box-shadow: 0 0 24px var(--green-glow); }
-    .btn.recording {
-      background: var(--coral-dim);
-      color: var(--coral);
-      border-color: var(--coral);
-      animation: pulse-rec 1.4s ease-in-out infinite;
-    }
-    .btn.danger { background: var(--coral-dim); color: var(--coral); border-color: rgba(224,90,58,0.3); }
-    .btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
-    @keyframes pulse-rec {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(224,90,58,0.4); }
-      50% { box-shadow: 0 0 0 6px rgba(224,90,58,0); }
-    }
-
-    .speed-group {
-      display: flex;
-      border: 1px solid var(--border2);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-    }
-    .speed-opt {
-      padding: 8px 12px;
-      font-size: 12px;
-      font-family: var(--font);
-      cursor: pointer;
-      color: var(--text3);
-      background: var(--bg3);
-      border: none;
-      border-right: 1px solid var(--border);
-      transition: all 0.15s;
-    }
-    .speed-opt:last-child { border-right: none; }
-    .speed-opt:hover { color: var(--text2); background: var(--bg3); }
-    .speed-opt.active { background: var(--green-dim); color: var(--green); font-weight: 500; }
-
-    /* REPEAT DOTS */
-    .repeat-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-    .rep-label { font-size: 12px; color: var(--text3); }
-    .rep-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--bg3);
-      border: 1px solid var(--border2);
-      transition: all 0.2s;
-    }
-    .rep-dot.done { background: var(--green); border-color: var(--green); box-shadow: 0 0 6px var(--green-glow); }
-
-    /* SCORE PANEL */
-    .score-panel {
-      background: var(--bg3);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius-sm);
-      padding: 16px;
-      margin-top: 14px;
-      animation: fadeUp 0.3s ease;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .score-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 9px;
-    }
-    .score-row:last-of-type { margin-bottom: 0; }
-    .s-label { font-size: 12px; color: var(--text3); min-width: 72px; }
-    .s-track { flex: 1; height: 4px; background: var(--bg); border-radius: 10px; overflow: hidden; }
-    .s-fill { height: 100%; border-radius: 10px; transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
-    .sf-green { background: var(--green); box-shadow: 0 0 6px var(--green-glow); }
-    .sf-blue { background: var(--blue); }
-    .sf-amber { background: var(--amber); }
-    .s-val { font-size: 12px; font-family: var(--mono); color: var(--text2); min-width: 34px; text-align: right; }
-    .score-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
-    .score-total-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-    }
-    .score-total-label { font-size: 13px; color: var(--text2); }
-    .score-total-num { font-size: 28px; font-weight: 600; letter-spacing: -1px; }
-    .score-total-num.high { color: var(--green); }
-    .score-total-num.mid { color: var(--amber); }
-    .score-total-num.low { color: var(--coral); }
-    .score-fb {
-      font-size: 12px;
-      margin-top: 10px;
-      padding: 9px 12px;
-      border-radius: 6px;
-      line-height: 1.5;
-    }
-    .fb-pass { background: var(--green-dim); color: var(--green); border: 1px solid rgba(29,185,122,0.2); }
-    .fb-ok { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(240,160,32,0.2); }
-    .fb-retry { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(224,90,58,0.2); }
-
-    /* AI LOADING */
-    .ai-loading {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 0;
-      font-size: 13px;
-      color: var(--text3);
-    }
-    .spinner {
-      width: 15px; height: 15px;
-      border: 2px solid var(--border2);
-      border-top-color: var(--green);
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* NAV BUTTONS */
-    .nav-btns {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 16px;
-    }
-    .sentence-counter {
-      font-size: 12px;
-      color: var(--text3);
-      font-family: var(--mono);
-    }
-
-    /* LEVEL MAP */
-    .level-map { display: flex; flex-direction: column; gap: 12px; }
-    .level-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .level-card:hover:not(.locked) { border-color: var(--border2); transform: translateY(-1px); }
-    .level-card.current { border-color: var(--green); }
-    .level-card.current::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--green), transparent);
-    }
-    .level-card.locked { opacity: 0.4; cursor: not-allowed; }
-    .lc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .lc-status { font-size: 11px; color: var(--text3); }
-    .lc-title { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
-    .lc-desc { font-size: 12px; color: var(--text2); line-height: 1.55; }
-    .lc-stats { display: flex; gap: 18px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
-    .lc-stat { font-size: 12px; color: var(--text3); }
-    .lc-stat strong { color: var(--text2); font-weight: 500; }
-    .lc-bar-track { height: 3px; background: var(--bg3); border-radius: 10px; margin-top: 8px; overflow: hidden; }
-    .lc-bar-fill { height: 100%; border-radius: 10px; background: var(--green); transition: width 0.6s ease; }
-
-    /* STATS */
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-    .stat-block {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 16px;
-    }
-    .stat-block-label { font-size: 11px; color: var(--text3); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-block-val { font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: -1px; }
-    .stat-block-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
-    .history-section-title { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-    .history-list { display: flex; flex-direction: column; gap: 6px; }
-    .history-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-    }
-    .h-score { font-size: 14px; font-weight: 600; font-family: var(--mono); min-width: 36px; }
-    .h-score.high { color: var(--green); }
-    .h-score.mid { color: var(--amber); }
-    .h-score.low { color: var(--coral); }
-    .h-text { font-size: 12px; color: var(--text3); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .h-pill {
-      font-size: 10px; padding: 2px 8px; border-radius: 10px; white-space: nowrap;
-    }
-    .empty-state { text-align: center; padding: 48px 0; color: var(--text3); font-size: 14px; }
-
-    /* SETTINGS MODAL */
-    .modal-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--bg2);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius);
-      padding: 28px;
-      width: 440px;
-      max-width: 95vw;
-      animation: fadeUp 0.2s ease;
-    }
-    .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-    .modal-sub { font-size: 13px; color: var(--text3); margin-bottom: 20px; line-height: 1.5; }
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 12px; color: var(--text3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .field input, .field select {
-      width: 100%;
-      background: var(--bg3);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 13px;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .field input:focus, .field select:focus { border-color: var(--green); }
-    .field select option { background: var(--bg2); }
-    .field-hint { font-size: 11px; color: var(--text3); margin-top: 5px; line-height: 1.4; }
-    .tts-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      margin-bottom: 8px;
-      transition: all 0.15s;
-    }
-    .tts-option:hover { border-color: var(--border2); }
-    .tts-option.selected { border-color: var(--green); background: var(--green-dim); }
-    .tts-option input[type=radio] { accent-color: var(--green); }
-    .tts-opt-label { font-size: 13px; font-weight: 500; }
-    .tts-opt-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
-    .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-
-    /* PLAYING ANIMATION */
-    .playing-indicator {
-      display: inline-flex;
-      align-items: flex-end;
-      gap: 2px;
-      height: 14px;
-      margin-left: 8px;
-    }
-    .pi-bar {
-      width: 3px;
-      background: var(--green);
-      border-radius: 2px;
-      animation: pi-bounce 0.8s ease-in-out infinite;
-    }
-    .pi-bar:nth-child(2) { animation-delay: 0.15s; }
-    .pi-bar:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes pi-bounce {
-      0%, 100% { height: 4px; }
-      50% { height: 12px; }
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--bg2);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius-sm);
-      padding: 10px 18px;
-      font-size: 13px;
-      color: var(--text2);
-      z-index: 300;
-      opacity: 0;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* RESPONSIVE */
-    @media (max-width: 480px) {
-      header { padding: 14px 16px; }
-      main { padding: 16px; }
-      .sentence-text { font-size: 17px; }
-      .stats-grid { grid-template-columns: 1fr; }
-    }
+    html{font-size:16px}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+    .app{max-width:720px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100;backdrop-filter:blur(12px)}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo-mark{width:34px;height:34px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#0d0f12;box-shadow:0 0 20px var(--green-glow)}
+    .logo-name{font-size:16px;font-weight:600;letter-spacing:-0.3px}
+    .logo-sub{font-size:11px;color:var(--text3)}
+    .header-right{display:flex;align-items:center;gap:8px}
+    .target-badge{padding:5px 12px;background:var(--green-dim);border:1px solid var(--green);border-radius:20px;font-size:12px;color:var(--green);font-weight:500}
+    .icon-btn{width:32px;height:32px;border:1px solid var(--border2);border-radius:8px;background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all 0.15s}
+    .icon-btn:hover{background:var(--bg3);color:var(--text)}
+    .level-bar{display:flex;align-items:center;gap:10px;padding:10px 24px;background:var(--bg2);border-bottom:1px solid var(--border)}
+    .lv-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
+    .lv1{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(77,159,236,0.3)}
+    .lv2{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,0.3)}
+    .lv3{background:var(--coral-dim);color:var(--coral);border:1px solid rgba(224,90,58,0.3)}
+    .lv4{background:var(--green-dim);color:var(--green);border:1px solid rgba(29,185,122,0.3)}
+    .bar-track{flex:1;height:4px;background:var(--bg3);border-radius:10px;overflow:hidden}
+    .bar-fill{height:100%;border-radius:10px;background:var(--green);transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 8px var(--green-glow)}
+    .bar-label{font-size:12px;color:var(--text3);min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
+    nav{display:flex;padding:0 24px;border-bottom:1px solid var(--border)}
+    .nav-tab{padding:11px 16px;font-size:13px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;font-family:var(--font);background:transparent;border-top:none;border-left:none;border-right:none;margin-bottom:-1px;white-space:nowrap}
+    .nav-tab:hover{color:var(--text2)}
+    .nav-tab.active{color:var(--green);border-bottom-color:var(--green);font-weight:500}
+    main{flex:1;padding:24px}
+    .sentence-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;position:relative;overflow:hidden}
+    .sentence-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green-glow),transparent)}
+    .type-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .type-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:500}
+    .pill-shadow{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(77,159,236,0.25)}
+    .pill-repeat{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,0.25)}
+    .pill-describe{background:var(--coral-dim);color:var(--coral);border:1px solid rgba(224,90,58,0.25)}
+    .pill-retell{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(139,127,232,0.25)}
+    .ai-gen-tag{font-size:10px;color:var(--green);background:var(--green-dim);border:1px solid rgba(29,185,122,0.2);padding:2px 8px;border-radius:10px}
+    .sentence-num{font-size:11px;color:var(--text3);font-family:var(--mono)}
+    .sentence-text{font-size:19px;font-weight:400;line-height:1.65;color:var(--text);margin-bottom:8px;letter-spacing:-0.2px;transition:filter 0.3s ease}
+    .sentence-text.blurred{filter:blur(6px);user-select:none}
+    .phonetic{font-size:12px;color:var(--text3);font-family:var(--mono);margin-bottom:6px}
+    .sentence-hint{font-size:12px;color:var(--text3);margin-bottom:16px}
+    .template-hint{background:var(--amber-dim);border:1px solid rgba(240,160,32,0.2);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--amber);line-height:1.65;margin-bottom:14px}
+    .timer-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .timer-track{flex:1;height:3px;background:var(--bg3);border-radius:10px;overflow:hidden}
+    .timer-fill{height:100%;border-radius:10px;background:var(--coral);transition:width 0.1s linear;box-shadow:0 0 6px rgba(224,90,58,0.4)}
+    .timer-num{font-family:var(--mono);font-size:13px;color:var(--coral);min-width:32px;text-align:right}
+    .controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:13px;font-family:var(--font);cursor:pointer;transition:all 0.15s;font-weight:400;white-space:nowrap}
+    .btn:hover{background:#222630;color:var(--text)}
+    .btn:active{transform:scale(0.97)}
+    .btn.primary{background:var(--green);color:#0d0f12;border-color:var(--green);font-weight:600;box-shadow:0 0 16px var(--green-glow)}
+    .btn.primary:hover{background:#22d689}
+    .btn.recording{background:var(--coral-dim);color:var(--coral);border-color:var(--coral);animation:pulse-rec 1.4s ease-in-out infinite}
+    .btn.ai-btn{background:var(--purple-dim);color:var(--purple);border-color:rgba(139,127,232,0.3)}
+    .btn.ai-btn:hover{background:rgba(139,127,232,0.2);color:var(--purple)}
+    .btn:disabled{opacity:0.35;cursor:not-allowed;pointer-events:none}
+    @keyframes pulse-rec{0%,100%{box-shadow:0 0 0 0 rgba(224,90,58,0.4)}50%{box-shadow:0 0 0 6px rgba(224,90,58,0)}}
+    .speed-group{display:flex;border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden}
+    .speed-opt{padding:8px 12px;font-size:12px;font-family:var(--font);cursor:pointer;color:var(--text3);background:var(--bg3);border:none;border-right:1px solid var(--border);transition:all 0.15s}
+    .speed-opt:last-child{border-right:none}
+    .speed-opt.active{background:var(--green-dim);color:var(--green);font-weight:500}
+    .repeat-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+    .rep-label{font-size:12px;color:var(--text3)}
+    .rep-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);transition:all 0.2s}
+    .rep-dot.done{background:var(--green);border-color:var(--green);box-shadow:0 0 6px var(--green-glow)}
+    .score-panel{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:16px;margin-top:14px;animation:fadeUp 0.3s ease}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .score-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+    .s-label{font-size:12px;color:var(--text3);min-width:72px}
+    .s-track{flex:1;height:4px;background:var(--bg);border-radius:10px;overflow:hidden}
+    .s-fill{height:100%;border-radius:10px;transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
+    .sf-green{background:var(--green);box-shadow:0 0 6px var(--green-glow)} .sf-blue{background:var(--blue)} .sf-amber{background:var(--amber)}
+    .s-val{font-size:12px;font-family:var(--mono);color:var(--text2);min-width:34px;text-align:right}
+    .score-divider{border:none;border-top:1px solid var(--border);margin:12px 0}
+    .score-total-row{display:flex;align-items:baseline;justify-content:space-between}
+    .score-total-label{font-size:13px;color:var(--text2)}
+    .score-total-num{font-size:28px;font-weight:600;letter-spacing:-1px}
+    .score-total-num.high{color:var(--green)} .score-total-num.mid{color:var(--amber)} .score-total-num.low{color:var(--coral)}
+    .score-fb{font-size:12px;margin-top:10px;padding:9px 12px;border-radius:6px;line-height:1.5}
+    .fb-pass{background:var(--green-dim);color:var(--green);border:1px solid rgba(29,185,122,0.2)}
+    .fb-ok{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,0.2)}
+    .fb-retry{background:var(--coral-dim);color:var(--coral);border:1px solid rgba(224,90,58,0.2)}
+    .ai-loading{display:flex;align-items:center;gap:10px;padding:12px 0;font-size:13px;color:var(--text3)}
+    .spinner{width:15px;height:15px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin 0.75s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .nav-btns{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+    .sentence-counter{font-size:12px;color:var(--text3);font-family:var(--mono)}
+    .ai-gen-panel{background:var(--bg2);border:1px solid rgba(139,127,232,0.25);border-radius:var(--radius);padding:20px;margin-bottom:12px}
+    .ai-gen-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+    .ai-gen-desc{font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.5}
+    .ai-gen-controls{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+    .ai-status{font-size:12px;color:var(--text3);margin-top:8px;min-height:16px}
+    .ai-status.ok{color:var(--green)}
+    .ai-status.err{color:var(--coral)}
+    .level-map{display:flex;flex-direction:column;gap:12px}
+    .level-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+    .level-card:hover:not(.locked){border-color:var(--border2);transform:translateY(-1px)}
+    .level-card.current{border-color:var(--green)}
+    .level-card.current::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+    .level-card.locked{opacity:0.4;cursor:not-allowed}
+    .lc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .lc-status{font-size:11px;color:var(--text3)}
+    .lc-title{font-size:15px;font-weight:500;margin-bottom:3px}
+    .lc-desc{font-size:12px;color:var(--text2);line-height:1.55}
+    .lc-stats{display:flex;gap:18px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+    .lc-stat{font-size:12px;color:var(--text3)}
+    .lc-stat strong{color:var(--text2);font-weight:500}
+    .lc-bar-track{height:3px;background:var(--bg3);border-radius:10px;margin-top:8px;overflow:hidden}
+    .lc-bar-fill{height:100%;border-radius:10px;background:var(--green);transition:width 0.6s ease}
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+    .stat-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px}
+    .stat-block-label{font-size:11px;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px}
+    .stat-block-val{font-size:26px;font-weight:600;color:var(--text);letter-spacing:-1px}
+    .stat-block-sub{font-size:11px;color:var(--text3);margin-top:2px}
+    .history-section-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
+    .history-list{display:flex;flex-direction:column;gap:6px}
+    .history-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm)}
+    .h-score{font-size:14px;font-weight:600;font-family:var(--mono);min-width:36px}
+    .h-score.high{color:var(--green)} .h-score.mid{color:var(--amber)} .h-score.low{color:var(--coral)}
+    .h-text{font-size:12px;color:var(--text3);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .empty-state{text-align:center;padding:48px 0;color:var(--text3);font-size:14px}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:28px;width:460px;max-width:95vw;max-height:90vh;overflow-y:auto;animation:fadeUp 0.2s ease}
+    .modal-title{font-size:16px;font-weight:600;margin-bottom:6px}
+    .modal-sub{font-size:13px;color:var(--text3);margin-bottom:20px;line-height:1.5}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:11px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+    .field input,.field select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;transition:border-color 0.15s}
+    .field input:focus,.field select:focus{border-color:var(--green)}
+    .field select option{background:var(--bg2)}
+    .field-hint{font-size:11px;color:var(--text3);margin-top:5px;line-height:1.4}
+    .tts-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;transition:all 0.15s}
+    .tts-option:hover{border-color:var(--border2)}
+    .tts-option.selected{border-color:var(--green);background:var(--green-dim)}
+    .tts-option input[type=radio]{accent-color:var(--green);margin-top:2px}
+    .tts-opt-label{font-size:13px;font-weight:500}
+    .tts-opt-sub{font-size:11px;color:var(--text3);margin-top:2px}
+    .section-divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+    .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+    .playing-indicator{display:inline-flex;align-items:flex-end;gap:2px;height:14px;margin-left:8px}
+    .pi-bar{width:3px;background:var(--green);border-radius:2px;animation:pi-bounce 0.8s ease-in-out infinite}
+    .pi-bar:nth-child(2){animation-delay:0.15s} .pi-bar:nth-child(3){animation-delay:0.3s}
+    @keyframes pi-bounce{0%,100%{height:4px}50%{height:12px}}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 18px;font-size:13px;color:var(--text2);z-index:300;opacity:0;transition:all 0.3s ease;white-space:nowrap}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:480px){header{padding:14px 16px}main{padding:16px}.sentence-text{font-size:16px}.stats-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-
 <div class="app">
-  <!-- HEADER -->
   <header>
     <div class="logo">
       <div class="logo-mark">P</div>
@@ -638,718 +180,643 @@
     </div>
     <div class="header-right">
       <div class="target-badge">목표 72점</div>
-      <button class="settings-btn" onclick="openSettings()" title="설정">⚙</button>
+      <button class="icon-btn" onclick="openSettings()" title="설정">⚙</button>
     </div>
   </header>
-
-  <!-- LEVEL PROGRESS -->
   <div class="level-bar">
     <span class="lv-badge lv1" id="lv-badge">Lv.1 기초</span>
-    <div class="bar-track">
-      <div class="bar-fill" id="bar-fill" style="width:0%"></div>
-    </div>
-    <span class="bar-label" id="bar-label">0 / 10</span>
+    <div class="bar-track"><div class="bar-fill" id="bar-fill" style="width:0%"></div></div>
+    <span class="bar-label" id="bar-label">0 / 0</span>
   </div>
-
-  <!-- NAV -->
   <nav>
     <button class="nav-tab active" data-tab="train" onclick="switchTab('train')">훈련</button>
+    <button class="nav-tab" data-tab="generate" onclick="switchTab('generate')">AI 생성</button>
     <button class="nav-tab" data-tab="levels" onclick="switchTab('levels')">레벨맵</button>
     <button class="nav-tab" data-tab="stats" onclick="switchTab('stats')">내 기록</button>
   </nav>
-
   <main id="main"></main>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div class="modal-overlay" id="settings-modal" onclick="closeSettingsOutside(event)">
   <div class="modal">
-    <div class="modal-title">TTS 설정</div>
-    <div class="modal-sub">문장 재생 방식을 선택하세요. ElevenLabs는 원어민 수준 발음을 제공합니다.</div>
-
-    <div>
-      <label class="tts-option selected" id="opt-browser" onclick="selectTts('browser')">
-        <input type="radio" name="tts" value="browser" checked />
-        <div>
-          <div class="tts-opt-label">브라우저 내장 TTS</div>
-          <div class="tts-opt-sub">무료 · API 키 불필요 · 품질 보통</div>
-        </div>
-      </label>
-      <label class="tts-option" id="opt-elevenlabs" onclick="selectTts('elevenlabs')">
-        <input type="radio" name="tts" value="elevenlabs" />
-        <div>
-          <div class="tts-opt-label">ElevenLabs API</div>
-          <div class="tts-opt-sub">고품질 원어민 발음 · API 키 필요 (무료 플랜 가능)</div>
-        </div>
-      </label>
-      <label class="tts-option" id="opt-openai" onclick="selectTts('openai')">
-        <input type="radio" name="tts" value="openai" />
-        <div>
-          <div class="tts-opt-label">OpenAI TTS</div>
-          <div class="tts-opt-sub">자연스러운 발음 · API 키 필요 (gpt-4o-mini-tts)</div>
-        </div>
-      </label>
-    </div>
-
-    <div class="field" id="el-key-field" style="display:none; margin-top:14px;">
+    <div class="modal-title">설정</div>
+    <div class="modal-sub">TTS 방식과 API 키를 설정하세요. 브라우저 로컬에만 저장됩니다.</div>
+    <label class="tts-option selected" id="opt-browser" onclick="selectTts('browser')">
+      <input type="radio" name="tts" value="browser" checked />
+      <div><div class="tts-opt-label">브라우저 내장 TTS</div><div class="tts-opt-sub">무료 · API 키 불필요 · 품질 보통</div></div>
+    </label>
+    <label class="tts-option" id="opt-elevenlabs" onclick="selectTts('elevenlabs')">
+      <input type="radio" name="tts" value="elevenlabs" />
+      <div><div class="tts-opt-label">ElevenLabs API</div><div class="tts-opt-sub">원어민 수준 발음 · 월 10,000자 무료</div></div>
+    </label>
+    <label class="tts-option" id="opt-openai" onclick="selectTts('openai')">
+      <input type="radio" name="tts" value="openai" />
+      <div><div class="tts-opt-label">OpenAI TTS</div><div class="tts-opt-sub">gpt-4o-mini-tts · 자연스러운 발음</div></div>
+    </label>
+    <div class="field" id="el-key-field" style="display:none;margin-top:12px">
       <label>ElevenLabs API Key</label>
       <input type="password" id="el-api-key" placeholder="sk_..." />
-      <div class="field-hint">
-        <a href="https://elevenlabs.io" target="_blank" style="color:var(--green)">elevenlabs.io</a>에서 무료로 발급 가능. 월 10,000자 무료.
-      </div>
+      <div class="field-hint"><a href="https://elevenlabs.io" target="_blank" style="color:var(--green)">elevenlabs.io</a>에서 무료 발급</div>
     </div>
-    <div class="field" id="el-voice-field" style="display:none;">
+    <div class="field" id="el-voice-field" style="display:none">
       <label>목소리</label>
       <select id="el-voice">
         <option value="21m00Tcm4TlvDq8ikWAM">Rachel (여성, 자연스러움)</option>
         <option value="AZnzlk1XvdvUeBnXmlld">Domi (여성, 활기찬)</option>
-        <option value="EXAVITQu4vr4xnSDxMaL">Bella (여성, 부드러움)</option>
         <option value="ErXwobaYiN019PkySvjV">Antoni (남성, 명확함)</option>
-        <option value="VR6AewLTigWG4xSOukaG">Arnold (남성, 강함)</option>
         <option value="pNInz6obpgDQGcFmaJgB">Adam (남성, 내레이션)</option>
       </select>
     </div>
-
-    <div class="field" id="oai-key-field" style="display:none; margin-top:14px;">
+    <div class="field" id="oai-key-field" style="display:none;margin-top:12px">
       <label>OpenAI API Key</label>
       <input type="password" id="oai-api-key" placeholder="sk-..." />
-      <div class="field-hint">
-        <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--green)">platform.openai.com</a>에서 발급.
-      </div>
     </div>
-    <div class="field" id="oai-voice-field" style="display:none;">
+    <div class="field" id="oai-voice-field" style="display:none">
       <label>목소리</label>
       <select id="oai-voice">
-        <option value="alloy">Alloy (중성적)</option>
-        <option value="echo">Echo (남성)</option>
-        <option value="fable">Fable (영국식)</option>
-        <option value="onyx">Onyx (남성, 낮음)</option>
-        <option value="nova" selected>Nova (여성, 자연스러움)</option>
-        <option value="shimmer">Shimmer (여성, 밝음)</option>
+        <option value="alloy">Alloy</option><option value="echo">Echo</option>
+        <option value="nova" selected>Nova (추천)</option><option value="shimmer">Shimmer</option>
       </select>
     </div>
-
+    <hr class="section-divider" />
+    <div class="field">
+      <label>Anthropic API Key (AI 문장 생성용)</label>
+      <input type="password" id="anthropic-key" placeholder="sk-ant-..." />
+      <div class="field-hint"><a href="https://console.anthropic.com" target="_blank" style="color:var(--green)">console.anthropic.com</a>에서 발급 · AI 탭에서 레벨별 문장 무한 생성</div>
+    </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeSettings()">취소</button>
       <button class="btn primary" onclick="saveSettings()">저장</button>
     </div>
   </div>
 </div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-/* ─── CURRICULUM DATA ─────────────────────────────────── */
-const CURRICULUM = [
-  {
-    level: 1, name: "기초 자동화", goal: "입 트이기", type: "shadow",
-    badge: "Lv.1 기초", badgeClass: "lv1",
-    desc: "짧은 문장 쉐도잉으로 입을 트는 단계. 0.75x 속도로 시작해 1.0x까지 올리세요.",
-    sentences: [
-      { text: "I go to work every day.", phonetic: "아이 고우 투 워크 에브리 데이", type: "shadow" },
-      { text: "She is reading a book right now.", phonetic: "쉬 이즈 리딩 어 북 라잇 나우", type: "shadow" },
-      { text: "They moved to a new city last year.", phonetic: "데이 무브드 투 어 뉴 시티 라스트 이어", type: "shadow" },
-      { text: "We need to finish this report soon.", phonetic: "위 니드 투 피니쉬 디스 리포트 순", type: "shadow" },
-      { text: "He always arrives early in the morning.", phonetic: "히 올웨이즈 어라이브즈 얼리 인 더 모닝", type: "shadow" },
-      { text: "The children are playing in the park.", phonetic: "더 칠드런 아 플레잉 인 더 파크", type: "shadow" },
-      { text: "I usually drink coffee before breakfast.", phonetic: "아이 유절리 드링크 커피 비포 브렉퍼스트", type: "shadow" },
-      { text: "She called me three times yesterday.", phonetic: "쉬 콜드 미 쓰리 타임즈 예스터데이", type: "shadow" },
-      { text: "The weather is getting colder this week.", phonetic: "더 웨더 이즈 게팅 콜더 디스 위크", type: "shadow" },
-      { text: "We should leave early to avoid traffic.", phonetic: "위 슈드 리브 얼리 투 어보이드 트래픽", type: "shadow" },
-    ]
-  },
-  {
-    level: 2, name: "정확도 강화", goal: "Repeat Sentence 대비", type: "repeat",
-    badge: "Lv.2 정확도", badgeClass: "lv2",
-    desc: "한 번만 듣고 즉시 따라 말하는 훈련. 텍스트는 채점 후 공개됩니다.",
-    sentences: [
-      { text: "The government should invest more in public transportation.", phonetic: "더 거번먼트 슈드 인베스트 모어 인 퍼블릭 트랜스포테이션", type: "repeat" },
-      { text: "Research suggests that regular exercise improves mental health significantly.", phonetic: "", type: "repeat" },
-      { text: "Students are required to submit their assignments by Friday.", phonetic: "", type: "repeat" },
-      { text: "The company announced a major restructuring plan last week.", phonetic: "", type: "repeat" },
-      { text: "Climate change poses serious risks to global biodiversity.", phonetic: "", type: "repeat" },
-      { text: "The professor explained the concept of quantum mechanics clearly.", phonetic: "", type: "repeat" },
-      { text: "Economic inequality has widened considerably over the past decade.", phonetic: "", type: "repeat" },
-      { text: "The library offers free access to thousands of digital resources.", phonetic: "", type: "repeat" },
-      { text: "Advances in technology have transformed the way we communicate.", phonetic: "", type: "repeat" },
-      { text: "The local government has approved funding for new infrastructure projects.", phonetic: "", type: "repeat" },
-    ]
-  },
-  {
-    level: 3, name: "PTE 핵심 유형", goal: "실제 시험 대응", type: "mixed",
-    badge: "Lv.3 핵심", badgeClass: "lv3",
-    desc: "Repeat Sentence, Describe Image, Retell Lecture 실전 유형 훈련.",
-    sentences: [
-      { text: "Despite significant progress in renewable energy adoption, fossil fuels continue to dominate the global energy market.", type: "repeat" },
-      { text: "The rapid urbanization of developing countries has created both opportunities and unprecedented environmental challenges.", type: "repeat" },
-      { text: "Scientists have discovered that the gut microbiome plays a crucial role in regulating immune system responses.", type: "repeat" },
-      { text: "The graph shows a steady increase in global temperatures over the past fifty years, with the most dramatic rise occurring after 1990.", type: "describe",
-        template: "The graph illustrates [trend]. The most notable feature is [peak/highlight]. Overall, [conclusion]." },
-      { text: "According to recent studies, bilingual individuals demonstrate enhanced cognitive flexibility and may delay the onset of dementia.", type: "repeat" },
-      { text: "The pie chart indicates that the service sector accounts for the largest proportion, followed by manufacturing and agriculture.", type: "describe",
-        template: "The pie chart shows [data]. The dominant category is [largest]. In contrast, [smallest] represents the smallest share." },
-      { text: "Artificial intelligence is increasingly being integrated into medical diagnosis, raising questions about data privacy and clinical accountability.", type: "repeat" },
-      { text: "The lecture discusses how ancient trade routes facilitated not only economic exchange but also the spread of cultural and religious ideas.", type: "retell",
-        template: "The lecture covers [topic]. The speaker explains that [key point 1]. Furthermore, [key point 2]. In conclusion, [main argument]." },
-      { text: "Urban heat islands form when natural land cover is replaced by dense concentrations of pavement, buildings, and other surfaces that absorb and retain heat.", type: "repeat" },
-      { text: "The diagram illustrates the water cycle, showing how evaporation, condensation, and precipitation interact in a continuous process.", type: "describe",
-        template: "The diagram depicts [subject]. The process begins with [step 1], followed by [step 2]. The cycle concludes when [final step]." },
-    ]
-  },
-  {
-    level: 4, name: "시험 모드", goal: "실전 점수 72", type: "exam",
-    badge: "Lv.4 실전", badgeClass: "lv4",
-    desc: "시간 제한 실전 모드. PTE 실제 시험 형식으로 훈련합니다.",
-    sentences: [
-      { text: "The correlation between socioeconomic status and educational achievement remains one of the most persistent challenges facing contemporary education systems.", type: "repeat", timeLimit: 15 },
-      { text: "Neuroplasticity refers to the brain's ability to reorganize itself by forming new neural connections throughout life in response to learning and experience.", type: "repeat", timeLimit: 15 },
-      { text: "The bar chart compares energy consumption across five sectors, with transportation and residential use showing the highest levels.", type: "describe", timeLimit: 40,
-        template: "The bar chart compares [categories]. [Highest] consumes the most energy. Conversely, [lowest] shows minimum consumption. Overall, [trend]." },
-      { text: "Globalisation has accelerated the flow of capital, goods, services, and people across borders, fundamentally reshaping national economies and cultural identities.", type: "repeat", timeLimit: 15 },
-      { text: "The researcher argues that confirmation bias significantly undermines the objectivity of scientific inquiry, particularly when funding sources have vested interests.", type: "repeat", timeLimit: 15 },
-      { text: "Recent archaeological findings suggest that early human migration patterns were far more complex and interconnected than previously assumed by mainstream scholars.", type: "repeat", timeLimit: 15 },
-      { text: "The flowchart outlines the legislative process, beginning with bill introduction and culminating in presidential assent or veto.", type: "describe", timeLimit: 40,
-        template: "The flowchart illustrates [process]. It begins with [step 1] and proceeds through [key stages]. The final outcome is [conclusion]." },
-      { text: "Quantum computing leverages the principles of superposition and entanglement to perform calculations that would be infeasible for classical computers.", type: "repeat", timeLimit: 15 },
-      { text: "The line graph tracks unemployment rates across three countries over a decade, revealing divergent recovery trajectories following the 2008 financial crisis.", type: "describe", timeLimit: 40,
-        template: "The line graph tracks [subject] over [period]. [Country A] shows [trend], while [Country B] demonstrates [contrast]. Overall, [observation]." },
-      { text: "Epigenetics demonstrates that environmental factors can influence gene expression without altering the underlying DNA sequence, challenging deterministic views of heredity.", type: "repeat", timeLimit: 15 },
-    ]
-  }
-];
-
-const TYPE_LABEL = { shadow: "쉐도잉", repeat: "Repeat Sentence", describe: "Describe Image", retell: "Retell Lecture" };
-const TYPE_PILL = { shadow: "pill-shadow", repeat: "pill-repeat", describe: "pill-describe", retell: "pill-retell" };
-const TYPE_HISTORY_PILL = { shadow: "pill-shadow", repeat: "pill-repeat", describe: "pill-describe", retell: "pill-retell" };
-
-/* ─── STATE ───────────────────────────────────────────── */
-let S = {
-  tab: "train",
-  lvl: 0,
-  idx: 0,
-  speed: 1.0,
-  reps: 0,
-  playing: false,
-  recording: false,
-  aiLoading: false,
-  showScore: false,
-  score: null,
-  textRevealed: false,
-  history: [],
-  progress: [0, 0, 0, 0],
-  tts: localStorage.getItem("pte_tts") || "browser",
-  elKey: localStorage.getItem("pte_el_key") || "",
-  elVoice: localStorage.getItem("pte_el_voice") || "21m00Tcm4TlvDq8ikWAM",
-  oaiKey: localStorage.getItem("pte_oai_key") || "",
-  oaiVoice: localStorage.getItem("pte_oai_voice") || "nova",
-  timerVal: 0,
-  timerMax: 15,
-  timerInterval: null,
-  audioCtx: null,
-  currentAudio: null,
+/* ══════════════════════════════════════════════════════
+   CURRICULUM — Level 1: 60문장, Level 2: 85문장,
+                Level 3: 40문장, Level 4: 30문장
+   ══════════════════════════════════════════════════════ */
+const BASE = {
+1:[
+{text:"I go to work every day.",phonetic:"아이 고우 투 워크 에브리 데이",type:"shadow"},
+{text:"She is reading a book right now.",phonetic:"쉬 이즈 리딩 어 북 라잇 나우",type:"shadow"},
+{text:"They moved to a new city last year.",phonetic:"데이 무브드 투 어 뉴 시티 라스트 이어",type:"shadow"},
+{text:"We need to finish this report soon.",phonetic:"위 니드 투 피니쉬 디스 리포트 순",type:"shadow"},
+{text:"He always arrives early in the morning.",phonetic:"히 올웨이즈 어라이브즈 얼리 인 더 모닝",type:"shadow"},
+{text:"The children are playing in the park.",phonetic:"더 칠드런 아 플레잉 인 더 파크",type:"shadow"},
+{text:"I usually drink coffee before breakfast.",phonetic:"아이 유절리 드링크 커피 비포 브렉퍼스트",type:"shadow"},
+{text:"She called me three times yesterday.",phonetic:"쉬 콜드 미 쓰리 타임즈 예스터데이",type:"shadow"},
+{text:"The weather is getting colder this week.",phonetic:"더 웨더 이즈 게팅 콜더 디스 위크",type:"shadow"},
+{text:"We should leave early to avoid traffic.",phonetic:"위 슈드 리브 얼리 투 어보이드 트래픽",type:"shadow"},
+{text:"The meeting starts at nine o'clock.",phonetic:"더 미팅 스타츠 앳 나인 오클락",type:"shadow"},
+{text:"Please turn off the lights when you leave.",phonetic:"플리즈 턴 오프 더 라이츠 웬 유 리브",type:"shadow"},
+{text:"I have been living here for five years.",phonetic:"아이 해브 빈 리빙 히어 포 파이브 이어즈",type:"shadow"},
+{text:"The bus arrives every twenty minutes.",phonetic:"더 버스 어라이브즈 에브리 트웬티 미닛츠",type:"shadow"},
+{text:"She speaks three languages fluently.",phonetic:"쉬 스픽스 쓰리 랭귀지즈 플루언틀리",type:"shadow"},
+{text:"He forgot to bring his passport.",phonetic:"히 포갓 투 브링 히즈 패스포트",type:"shadow"},
+{text:"The store closes at ten on weekdays.",phonetic:"더 스토어 클로우지즈 앳 텐 온 위크데이즈",type:"shadow"},
+{text:"I need to call the doctor tomorrow.",phonetic:"아이 니드 투 콜 더 닥터 투마로우",type:"shadow"},
+{text:"She finished the project ahead of schedule.",phonetic:"쉬 피니쉬드 더 프로젝트 어헤드 오브 스케줄",type:"shadow"},
+{text:"The train was delayed by thirty minutes.",phonetic:"더 트레인 워즈 딜레이드 바이 써티 미닛츠",type:"shadow"},
+{text:"He is studying for his final exams.",phonetic:"히 이즈 스터디잉 포 히즈 파이널 이그잼즈",type:"shadow"},
+{text:"We enjoyed the concert very much last night.",phonetic:"위 인조이드 더 콘서트 베리 머치 라스트 나잇",type:"shadow"},
+{text:"The supermarket is just around the corner.",phonetic:"더 수퍼마켓 이즈 저스트 어라운드 더 코너",type:"shadow"},
+{text:"I will send you the email this afternoon.",phonetic:"아이 윌 센드 유 더 이메일 디스 애프터눈",type:"shadow"},
+{text:"She decided to change her career path.",phonetic:"쉬 디사이디드 투 체인지 허 커리어 패스",type:"shadow"},
+{text:"The library is open until eight in the evening.",phonetic:"더 라이브러리 이즈 오픈 언틸 에잇 인 더 이브닝",type:"shadow"},
+{text:"He asked for directions to the nearest station.",phonetic:"히 애스크드 포 디렉션즈 투 더 니어리스트 스테이션",type:"shadow"},
+{text:"The price of groceries has gone up recently.",phonetic:"더 프라이스 오브 그로서리즈 해즈 곤 업 리센틀리",type:"shadow"},
+{text:"She borrowed a book from the library.",phonetic:"쉬 보로우드 어 북 프롬 더 라이브러리",type:"shadow"},
+{text:"We are planning a trip to Japan next spring.",phonetic:"위 아 플래닝 어 트립 투 재팬 넥스트 스프링",type:"shadow"},
+{text:"The new restaurant opened last month.",phonetic:"더 뉴 레스터랑 오픈드 라스트 먼쓰",type:"shadow"},
+{text:"I prefer to walk rather than take the bus.",phonetic:"아이 프리퍼 투 워크 래더 댄 테이크 더 버스",type:"shadow"},
+{text:"He has worked at this company for a decade.",phonetic:"히 해즈 워크드 앳 디스 컴퍼니 포 어 데케이드",type:"shadow"},
+{text:"The children were excited about the school trip.",phonetic:"더 칠드런 워 익사이티드 어바웃 더 스쿨 트립",type:"shadow"},
+{text:"She bought a new laptop for her studies.",phonetic:"쉬 밧 어 뉴 랩탑 포 허 스터디즈",type:"shadow"},
+{text:"The river runs through the center of the city.",phonetic:"더 리버 런즈 쓰루 더 센터 오브 더 시티",type:"shadow"},
+{text:"Please submit your application by the deadline.",phonetic:"플리즈 서브밋 유어 어플리케이션 바이 더 데드라인",type:"shadow"},
+{text:"He reads the newspaper every morning at breakfast.",phonetic:"히 리즈 더 뉴스페이퍼 에브리 모닝 앳 브렉퍼스트",type:"shadow"},
+{text:"The temperature dropped significantly overnight.",phonetic:"더 템퍼러처 드롭트 시그니피컨틀리 오버나잇",type:"shadow"},
+{text:"She is looking forward to the summer holidays.",phonetic:"쉬 이즈 루킹 포워드 투 더 서머 홀리데이즈",type:"shadow"},
+{text:"They signed the contract after long negotiations.",phonetic:"데이 사인드 더 컨트랙트 애프터 롱 니고시에이션즈",type:"shadow"},
+{text:"The museum is free to enter on Sundays.",phonetic:"더 뮤지엄 이즈 프리 투 엔터 온 선데이즈",type:"shadow"},
+{text:"I have an appointment with the dentist tomorrow.",phonetic:"아이 해브 언 어포인먼트 위드 더 덴티스트 투마로우",type:"shadow"},
+{text:"She passed all her exams with excellent grades.",phonetic:"쉬 패스트 올 허 이그잼즈 위드 엑셀런트 그레이즈",type:"shadow"},
+{text:"The company is expanding into new markets.",phonetic:"더 컴퍼니 이즈 익스팬딩 인투 뉴 마켓츠",type:"shadow"},
+{text:"He forgot to turn off the oven before leaving.",phonetic:"히 포갓 투 턴 오프 디 오븐 비포 리빙",type:"shadow"},
+{text:"The students were asked to work in groups.",phonetic:"더 스튜던츠 워 애스크드 투 워크 인 그룹스",type:"shadow"},
+{text:"She donates a portion of her income to charity.",phonetic:"쉬 도네이츠 어 포션 오브 허 인컴 투 채러티",type:"shadow"},
+{text:"The flight was cancelled due to bad weather.",phonetic:"더 플라잇 워즈 캔슬드 듀 투 배드 웨더",type:"shadow"},
+{text:"I find it difficult to concentrate in a noisy room.",phonetic:"아이 파인드 잇 디피컬트 투 콘센트레이트 인 어 노이지 룸",type:"shadow"},
+{text:"He graduated from university with honours.",phonetic:"히 그래쥬에이티드 프롬 유니버서티 위드 오너즈",type:"shadow"},
+{text:"The park is a popular spot for morning joggers.",phonetic:"더 파크 이즈 어 파퓰러 스팟 포 모닝 져거즈",type:"shadow"},
+{text:"She is saving money to buy her first home.",phonetic:"쉬 이즈 세이빙 머니 투 바이 허 퍼스트 홈",type:"shadow"},
+{text:"The committee reviewed the proposal last week.",phonetic:"더 커미티 리뷰드 더 프로포잘 라스트 위크",type:"shadow"},
+{text:"He often works overtime to meet project deadlines.",phonetic:"히 오픈 웍스 오버타임 투 밋 프로젝트 데드라인즈",type:"shadow"},
+{text:"The lecture will be recorded and posted online.",phonetic:"더 렉처 윌 비 리코디드 앤드 포스티드 온라인",type:"shadow"},
+{text:"She enjoys hiking in the mountains on weekends.",phonetic:"쉬 인조이즈 하이킹 인 더 마운틴즈 온 위켄즈",type:"shadow"},
+{text:"The new policy took effect from the first of January.",phonetic:"더 뉴 폴러시 툭 이펙트 프롬 더 퍼스트 오브 재뉴어리",type:"shadow"},
+{text:"I would like to speak to the manager, please.",phonetic:"아이 우드 라이크 투 스피크 투 더 매니저 플리즈",type:"shadow"},
+{text:"The documentary revealed shocking facts about pollution.",phonetic:"더 다큐멘터리 리빌드 쇼킹 팩츠 어바웃 폴루션",type:"shadow"},
+{text:"She has been volunteering at the shelter for years.",phonetic:"쉬 해즈 빈 볼런티어링 앳 더 쉘터 포 이어즈",type:"shadow"},
+{text:"The team won the championship for the third time.",phonetic:"더 팀 원 더 챔피언쉽 포 더 써드 타임",type:"shadow"},
+],
+2:[
+{text:"The government should invest more in public transportation.",type:"repeat"},
+{text:"Research suggests that regular exercise improves mental health significantly.",type:"repeat"},
+{text:"Students are required to submit their assignments by Friday.",type:"repeat"},
+{text:"The company announced a major restructuring plan last week.",type:"repeat"},
+{text:"Climate change poses serious risks to global biodiversity.",type:"repeat"},
+{text:"The professor explained the concept of quantum mechanics clearly.",type:"repeat"},
+{text:"Economic inequality has widened considerably over the past decade.",type:"repeat"},
+{text:"The library offers free access to thousands of digital resources.",type:"repeat"},
+{text:"Advances in technology have transformed the way we communicate.",type:"repeat"},
+{text:"The local government has approved funding for new infrastructure projects.",type:"repeat"},
+{text:"Renewable energy sources are becoming increasingly cost-effective worldwide.",type:"repeat"},
+{text:"The study found a strong correlation between diet and health outcomes.",type:"repeat"},
+{text:"Universities are under pressure to improve graduate employment rates.",type:"repeat"},
+{text:"The new regulations aim to reduce carbon emissions by thirty percent.",type:"repeat"},
+{text:"Scientists have made a breakthrough in the treatment of Alzheimer's disease.",type:"repeat"},
+{text:"The report highlights the need for urgent action on climate change.",type:"repeat"},
+{text:"Students who read regularly perform better in standardised tests.",type:"repeat"},
+{text:"The conference attracted delegates from more than fifty countries.",type:"repeat"},
+{text:"Access to clean water remains a major challenge in many developing nations.",type:"repeat"},
+{text:"The introduction of automation has displaced many workers in manufacturing.",type:"repeat"},
+{text:"Researchers discovered that sleep deprivation impairs cognitive function significantly.",type:"repeat"},
+{text:"The prime minister announced a series of new economic reforms.",type:"repeat"},
+{text:"Social media has fundamentally changed the way information is shared.",type:"repeat"},
+{text:"The university offers a wide range of postgraduate programmes.",type:"repeat"},
+{text:"Public health campaigns have helped reduce smoking rates dramatically.",type:"repeat"},
+{text:"The experiment demonstrated that plants grow faster in controlled environments.",type:"repeat"},
+{text:"Many employees prefer remote work for its flexibility and convenience.",type:"repeat"},
+{text:"The charity raised over one million dollars for disaster relief.",type:"repeat"},
+{text:"Global food production must increase to meet rising population demands.",type:"repeat"},
+{text:"The museum's new exhibition attracted record numbers of visitors.",type:"repeat"},
+{text:"The deadline for applications is the fifteenth of next month.",type:"repeat"},
+{text:"Language acquisition in children is closely linked to early exposure.",type:"repeat"},
+{text:"The policy was designed to encourage sustainable agricultural practices.",type:"repeat"},
+{text:"Mental health awareness has grown significantly in recent years.",type:"repeat"},
+{text:"The results of the survey were published in a leading medical journal.",type:"repeat"},
+{text:"Higher education institutions are adapting to the demands of a digital economy.",type:"repeat"},
+{text:"The indigenous community was granted land rights after years of litigation.",type:"repeat"},
+{text:"Deforestation continues at an alarming rate in tropical regions worldwide.",type:"repeat"},
+{text:"The central bank raised interest rates to control rising inflation.",type:"repeat"},
+{text:"Participation in sport has been linked to improved academic performance.",type:"repeat"},
+{text:"The researcher spent three years conducting fieldwork in remote communities.",type:"repeat"},
+{text:"Consumer spending increased sharply in the final quarter of the year.",type:"repeat"},
+{text:"The findings suggest that early intervention is critical in treating depression.",type:"repeat"},
+{text:"New immigration policies have sparked debate among lawmakers and communities.",type:"repeat"},
+{text:"The city plans to build five new schools over the next decade.",type:"repeat"},
+{text:"Air quality in urban areas has deteriorated due to vehicle emissions.",type:"repeat"},
+{text:"The scholarship is awarded annually to outstanding students in science.",type:"repeat"},
+{text:"A lack of affordable housing is driving many families out of the city.",type:"repeat"},
+{text:"The paper explores the relationship between poverty and educational attainment.",type:"repeat"},
+{text:"International trade agreements have significant implications for domestic industries.",type:"repeat"},
+{text:"The patient recovered quickly following the minimally invasive procedure.",type:"repeat"},
+{text:"Cybersecurity threats are becoming increasingly sophisticated and difficult to detect.",type:"repeat"},
+{text:"The documentary explores the cultural impact of globalisation on small communities.",type:"repeat"},
+{text:"Engineers are developing new materials that could revolutionise battery technology.",type:"repeat"},
+{text:"The exhibition showcases works by artists from across the Asia-Pacific region.",type:"repeat"},
+{text:"Governments worldwide are under pressure to adopt cleaner energy alternatives.",type:"repeat"},
+{text:"The seminar will be held in the main lecture theatre on Thursday morning.",type:"repeat"},
+{text:"She was awarded a grant to continue her research into infectious diseases.",type:"repeat"},
+{text:"The population of the coastal city has doubled over the past twenty years.",type:"repeat"},
+{text:"Overcrowding in prisons remains a persistent challenge for criminal justice systems.",type:"repeat"},
+{text:"The invention of the printing press transformed the spread of knowledge.",type:"repeat"},
+{text:"Nutrient deficiencies in children can have long-lasting effects on development.",type:"repeat"},
+{text:"The bridge was designed to withstand earthquakes of significant magnitude.",type:"repeat"},
+{text:"Ethical considerations must be at the forefront of artificial intelligence development.",type:"repeat"},
+{text:"The programme provides mentoring and career guidance to first-generation university students.",type:"repeat"},
+{text:"Rising sea levels threaten the existence of several low-lying island nations.",type:"repeat"},
+{text:"The government is considering legislation to regulate facial recognition technology.",type:"repeat"},
+{text:"Volunteers played a crucial role in coordinating relief efforts after the earthquake.",type:"repeat"},
+{text:"The discovery of the ancient tomb has shed new light on early civilisation.",type:"repeat"},
+{text:"Competition for top university places has never been more intense.",type:"repeat"},
+{text:"The agreement was reached after weeks of difficult and complex negotiations.",type:"repeat"},
+{text:"Microplastics have been found in the deepest parts of the ocean.",type:"repeat"},
+{text:"The award recognises individuals who have made outstanding contributions to public service.",type:"repeat"},
+{text:"Urban farming initiatives are helping to address food insecurity in cities.",type:"repeat"},
+{text:"The policy aims to close the gap between high and low-income earners.",type:"repeat"},
+{text:"Engineers are working on a prototype for a fully autonomous passenger vehicle.",type:"repeat"},
+{text:"The ancient manuscripts were carefully preserved and digitised for future generations.",type:"repeat"},
+{text:"Declining birth rates are putting pressure on pension and healthcare systems.",type:"repeat"},
+{text:"She presented her findings at an international conference in Geneva.",type:"repeat"},
+{text:"The curriculum has been revised to include more emphasis on digital literacy.",type:"repeat"},
+{text:"Water scarcity affects more than two billion people around the world.",type:"repeat"},
+{text:"Pharmaceutical companies are investing heavily in the development of new vaccines.",type:"repeat"},
+],
+3:[
+{text:"Despite significant progress in renewable energy adoption, fossil fuels continue to dominate the global energy market.",type:"repeat"},
+{text:"The rapid urbanization of developing countries has created both opportunities and unprecedented environmental challenges.",type:"repeat"},
+{text:"Scientists have discovered that the gut microbiome plays a crucial role in regulating immune system responses.",type:"repeat"},
+{text:"The graph shows a steady increase in global temperatures over the past fifty years, with the most dramatic rise occurring after 1990.",type:"describe",template:"The graph illustrates [trend]. The most notable feature is [peak/highlight]. Overall, [conclusion]."},
+{text:"According to recent studies, bilingual individuals demonstrate enhanced cognitive flexibility and may delay the onset of dementia.",type:"repeat"},
+{text:"The pie chart indicates that the service sector accounts for the largest proportion, followed by manufacturing and agriculture.",type:"describe",template:"The pie chart shows [data]. The dominant category is [largest]. In contrast, [smallest] represents the smallest share."},
+{text:"Artificial intelligence is increasingly being integrated into medical diagnosis, raising critical questions about data privacy and clinical accountability.",type:"repeat"},
+{text:"The lecture discusses how ancient trade routes facilitated not only economic exchange but also the spread of cultural and religious ideas.",type:"retell",template:"The lecture covers [topic]. The speaker explains [key point 1]. Furthermore, [key point 2]. In conclusion, [main argument]."},
+{text:"Urban heat islands form when natural land cover is replaced by dense concentrations of pavement and other surfaces that absorb and retain heat.",type:"repeat"},
+{text:"The diagram illustrates the water cycle, showing how evaporation, condensation, and precipitation interact in a continuous process.",type:"describe",template:"The diagram depicts [subject]. The process begins with [step 1], followed by [step 2]. The cycle concludes when [final step]."},
+{text:"The lecture argues that the industrial revolution fundamentally altered social structures, accelerating urbanisation and reshaping class relations.",type:"retell",template:"The lecture focuses on [topic]. The main argument is that [claim]. Evidence includes [example 1] and [example 2]. The speaker concludes that [conclusion]."},
+{text:"The bar chart compares literacy rates across six regions, showing North America and Europe have the highest levels while sub-Saharan Africa lags behind.",type:"describe",template:"The bar chart compares [categories]. [Region A] records the highest figure, while [Region B] shows the lowest. The data suggests [trend]."},
+{text:"Cognitive behavioural therapy has proven effective in treating a range of anxiety disorders, particularly when combined with medication.",type:"repeat"},
+{text:"The table shows changes in average household income across four income brackets over a ten-year period.",type:"describe",template:"The table presents [data type] over [period]. The most significant change occurred in [category], which [increased/decreased] by [amount]. Overall, [conclusion]."},
+{text:"The lecture explores how migratory patterns of birds are being disrupted by climate change, threatening biodiversity along established flyways.",type:"retell",template:"The lecture examines [topic]. The speaker notes that [problem]. Key contributing factors include [factor 1] and [factor 2]. The speaker recommends [solution]."},
+{text:"Gene editing technologies such as CRISPR hold promise for treating hereditary diseases but raise significant ethical and regulatory questions.",type:"repeat"},
+{text:"The line graph tracks the unemployment rate in three countries from 2000 to 2020, showing a sharp spike following the 2008 financial crisis.",type:"describe",template:"The line graph tracks [subject] over [period]. All three countries experienced [common trend]. [Country A] recovered faster, while [Country B] continued to struggle."},
+{text:"The professor argues that traditional assessment methods fail to capture the full range of student abilities and should be reformed.",type:"retell",template:"The lecture critiques [system]. The professor argues that [main problem]. Alternative approaches include [option 1] and [option 2]. The conclusion is that [recommendation]."},
+{text:"Mass extinction events throughout geological history have been followed by periods of rapid evolutionary diversification.",type:"repeat"},
+{text:"The scatter plot demonstrates a positive correlation between years of education and lifetime earnings across different demographic groups.",type:"describe",template:"The scatter plot shows the relationship between [X] and [Y]. There is a [positive/negative] correlation, indicating that [interpretation]. Outliers include [observation]."},
+{text:"Ocean acidification caused by increased carbon dioxide absorption is devastating coral reef ecosystems and threatening marine biodiversity.",type:"repeat"},
+{text:"The lecture outlines the main phases of the scientific method, emphasising the importance of reproducibility and peer review.",type:"retell",template:"The lecture outlines [topic]. The speaker identifies [phase 1], followed by [phase 2]. A key emphasis is placed on [important concept]. The conclusion highlights [main takeaway]."},
+{text:"Digital transformation has disrupted traditional business models, forcing industries to innovate or risk becoming obsolete.",type:"repeat"},
+{text:"The infographic presents data on global energy consumption by source, highlighting the growing share of solar and wind power since 2010.",type:"describe",template:"The infographic illustrates [topic]. Fossil fuels [status], while renewable sources such as [example] have [trend]. The data implies [conclusion]."},
+{text:"The speaker contends that urbanisation, while economically beneficial, has exacerbated inequality and placed unsustainable pressure on infrastructure.",type:"retell",template:"The speaker examines [topic]. The central argument is [claim]. Supporting evidence includes [point 1] and [point 2]. The speaker warns that [consequence] if action is not taken."},
+{text:"Antibiotic resistance is emerging as one of the most serious public health threats of the twenty-first century.",type:"repeat"},
+{text:"The flow diagram outlines the stages of water treatment, from initial collection and filtration through to chemical purification and distribution.",type:"describe",template:"The flow diagram presents the [process]. It begins with [stage 1], progresses through [stage 2], and concludes with [final stage]. Each step ensures [purpose]."},
+{text:"Researchers have found evidence suggesting that early childhood stress can alter brain development and increase vulnerability to mental illness.",type:"repeat"},
+{text:"The lecture presents evidence that dietary choices have a greater impact on longevity than genetic factors in most populations studied.",type:"retell",template:"The lecture examines [topic]. The core finding is [claim]. This is supported by [evidence]. The implication is that [conclusion or recommendation]."},
+{text:"The proliferation of social media platforms has fundamentally changed political discourse, enabling both grassroots movements and the spread of disinformation.",type:"repeat"},
+{text:"The diagram shows how photosynthesis converts light energy into chemical energy stored in glucose, releasing oxygen as a byproduct.",type:"describe",template:"The diagram illustrates [biological process]. Starting with [input], the process produces [output]. The key stages are [stage 1] and [stage 2]."},
+{text:"The lecture discusses the psychological impact of long-term unemployment, noting significant links to depression and social withdrawal.",type:"retell",template:"The lecture addresses [issue]. The speaker identifies [effect 1] and [effect 2] as major consequences. The proposed solution involves [recommendation]."},
+{text:"Genetically modified crops have the potential to increase yields and resist disease, though concerns about ecological impact persist.",type:"repeat"},
+{text:"The chart illustrates the proportion of households with internet access across income levels, revealing a persistent digital divide.",type:"describe",template:"The chart reveals [topic]. Higher income groups show [figure], while lower income groups show [lower figure]. This disparity reflects [underlying issue]."},
+{text:"The speaker argues that standardised testing disadvantages students from lower socioeconomic backgrounds and perpetuates educational inequality.",type:"retell",template:"The lecture critiques [practice]. The speaker argues it disadvantages [group] because [reason]. Alternatives suggested include [option 1] and [option 2]."},
+{text:"The increasing prevalence of non-communicable diseases such as diabetes and heart disease is straining healthcare systems globally.",type:"repeat"},
+{text:"The timeline displays the major milestones in space exploration, from the first satellite launch in 1957 to current Mars missions.",type:"describe",template:"The timeline traces [topic] from [start] to [end]. Key milestones include [event 1] and [event 2]. The overall trajectory suggests [conclusion]."},
+{text:"The lecture examines how colonialism disrupted indigenous knowledge systems and the long-term consequences for cultural identity.",type:"retell",template:"The lecture explores [topic]. The speaker argues that [main effect]. This manifested in [example]. Long-term consequences include [outcome 1] and [outcome 2]."},
+{text:"International cooperation is essential for addressing global challenges such as pandemics, climate change, and nuclear proliferation.",type:"repeat"},
+{text:"The map indicates population density across the continent, showing heavy concentration in coastal regions and river valleys.",type:"describe",template:"The map displays [data]. The most densely populated areas are [region 1] and [region 2]. In contrast, [region 3] remains sparsely settled due to [reason]."},
+],
+4:[
+{text:"The correlation between socioeconomic status and educational achievement remains one of the most persistent challenges facing contemporary education systems worldwide.",type:"repeat",timeLimit:15},
+{text:"Neuroplasticity refers to the brain's ability to reorganize itself by forming new neural connections throughout life in response to learning, experience, and environmental changes.",type:"repeat",timeLimit:15},
+{text:"The bar chart compares energy consumption across five sectors, with transportation and residential use consistently showing the highest levels over the observed period.",type:"describe",timeLimit:40,template:"The bar chart compares [categories] over [period]. [Highest sector] dominates. [Second] follows closely. Overall, consumption patterns suggest [trend]."},
+{text:"Globalisation has accelerated the flow of capital, goods, services, and people across borders, fundamentally reshaping national economies and challenging traditional notions of cultural identity.",type:"repeat",timeLimit:15},
+{text:"The researcher argues that confirmation bias significantly undermines the objectivity of scientific inquiry, particularly in fields where funding sources have vested commercial or political interests.",type:"repeat",timeLimit:15},
+{text:"Recent archaeological findings suggest that early human migration patterns were far more complex and interconnected than previously assumed by mainstream anthropological scholarship.",type:"repeat",timeLimit:15},
+{text:"The flowchart outlines the legislative process, beginning with the drafting of a bill and culminating in either presidential assent or executive veto.",type:"describe",timeLimit:40,template:"The flowchart illustrates the [process]. It originates with [step 1] and proceeds through [key stages]. The final outcome depends on [condition], resulting in [outcome A] or [outcome B]."},
+{text:"Quantum computing leverages the principles of superposition and quantum entanglement to perform computational tasks that would be entirely infeasible for classical computing architectures.",type:"repeat",timeLimit:15},
+{text:"The line graph tracks unemployment rates across three developed economies over a decade, revealing divergent recovery trajectories in the aftermath of the 2008 global financial crisis.",type:"describe",timeLimit:40,template:"The line graph tracks [subject] from [start] to [end]. All economies experienced [shared trend] around [year]. Subsequently, [Economy A] recovered differently than [Economy B], suggesting [interpretation]."},
+{text:"Epigenetics demonstrates that environmental and lifestyle factors can influence gene expression without altering the underlying DNA sequence, challenging deterministic views of heredity.",type:"repeat",timeLimit:15},
+{text:"The degradation of natural ecosystems through unsustainable land use practices is undermining the ecological services upon which both biodiversity and human civilisations ultimately depend.",type:"repeat",timeLimit:15},
+{text:"Populist movements across the political spectrum have exploited public disillusionment with establishment institutions, raising fundamental questions about the resilience of liberal democratic governance.",type:"repeat",timeLimit:15},
+{text:"The diagram illustrates the stages of urban heat island formation, from impervious surface expansion through to differential warming and its downstream effects on local climate patterns.",type:"describe",timeLimit:40,template:"The diagram presents [topic]. The process begins when [initial condition], leading to [stage 1]. This progresses to [stage 2], ultimately resulting in [outcome]. Key drivers include [factor 1] and [factor 2]."},
+{text:"Longitudinal studies have consistently demonstrated that early childhood interventions in nutrition, education, and healthcare yield substantial long-term economic and social returns for societies.",type:"repeat",timeLimit:15},
+{text:"The emergence of platform economies has challenged existing regulatory frameworks, as traditional employment classifications fail to capture the nature of gig-based labour arrangements.",type:"repeat",timeLimit:15},
+{text:"The comparative table presents carbon emission levels across ten nations, ranked by total output as well as per capita figures, revealing significant disparities between industrialised and emerging economies.",type:"describe",timeLimit:40,template:"The table compares [data] across [number] nations. By total output, [Country A] leads. However, per capita figures reveal [Country B] as [observation]. This distinction highlights [implication]."},
+{text:"Microbiological research has revealed that antibiotic resistance genes can transfer between bacterial species through horizontal gene transfer, complicating efforts to contain drug-resistant infections.",type:"repeat",timeLimit:15},
+{text:"The financialisation of housing markets in major metropolitan areas has systematically eroded affordability, contributing to growing wealth disparities and deteriorating social cohesion.",type:"repeat",timeLimit:15},
+{text:"The graph demonstrates the inverse relationship between national income levels and total fertility rates, consistent with the demographic transition model observed across industrialising economies.",type:"describe",timeLimit:40,template:"The graph illustrates [relationship]. As [X] increases, [Y] [increases/decreases], consistent with [theoretical model]. This trend is most pronounced in [region/group]."},
+{text:"Machine learning algorithms trained on biased datasets have the potential to perpetuate and amplify systemic discrimination in high-stakes domains such as criminal justice and employment.",type:"repeat",timeLimit:15},
+{text:"The philosophical tradition of consequentialism evaluates the moral worth of actions solely by their outcomes, generating significant tensions when applied to real-world policy dilemmas.",type:"repeat",timeLimit:15},
+{text:"The stacked area chart illustrates the changing composition of global electricity generation from 2000 to 2023, showing the gradual displacement of coal by natural gas and renewables.",type:"describe",timeLimit:40,template:"The stacked area chart tracks [topic] over [period]. Coal's share [changed], while renewables [trend]. The cumulative shift indicates [conclusion about the energy transition]."},
+{text:"Behavioural economics has demonstrated that individuals systematically deviate from the rational actor model, with predictable cognitive biases influencing decisions related to savings, health, and risk.",type:"repeat",timeLimit:15},
+{text:"The acceleration of technological change is outpacing the capacity of educational institutions and labour markets to adapt, creating structural mismatches in skills and widening inequality.",type:"repeat",timeLimit:15},
+{text:"The process diagram outlines how CRISPR-Cas9 gene editing technology works, from guide RNA design through to targeted DNA cleavage and the subsequent cellular repair mechanisms.",type:"describe",timeLimit:40,template:"The diagram explains [technology/process]. It begins with [preparation step], followed by [action step], and concludes with [outcome]. The precision of [key component] determines [result]."},
+{text:"The tension between national sovereignty and the obligations imposed by international human rights law remains one of the most contested areas of contemporary global governance.",type:"repeat",timeLimit:15},
+{text:"Permafrost thaw in Arctic regions is releasing previously sequestered methane and carbon dioxide, creating a self-reinforcing feedback loop that could dramatically accelerate global warming.",type:"repeat",timeLimit:15},
+{text:"The grouped bar chart compares government expenditure on education, healthcare, and defence across four countries, revealing strikingly different public spending priorities.",type:"describe",timeLimit:40,template:"The grouped bar chart compares [categories] across [countries]. [Country A] allocates the highest share to [sector]. In contrast, [Country B] prioritises [different sector]. These differences reflect [political or economic context]."},
+{text:"Advances in neuroimaging have enabled researchers to observe neural correlates of consciousness in real time, yet a comprehensive scientific explanation for subjective experience remains elusive.",type:"repeat",timeLimit:15},
+{text:"The proliferation of autonomous weapons systems raises profound questions about accountability, proportionality, and the future applicability of existing international humanitarian law frameworks.",type:"repeat",timeLimit:15},
+]
 };
 
-function sentence() { return CURRICULUM[S.lvl].sentences[S.idx]; }
-function lvlData() { return CURRICULUM[S.lvl]; }
-function isUnlocked(i) {
-  return i === 0 || S.progress[i-1] >= 7;
+/* ══ STATE ══ */
+let S={
+  tab:"train",lvl:0,idx:0,speed:1.0,reps:0,
+  playing:false,recording:false,aiLoading:false,
+  showScore:false,score:null,textRevealed:false,
+  history:[],progress:[0,0,0,0],
+  sentences:{1:[...BASE[1]],2:[...BASE[2]],3:[...BASE[3]],4:[...BASE[4]]},
+  tts:localStorage.getItem("pte_tts")||"browser",
+  elKey:localStorage.getItem("pte_el_key")||"",
+  elVoice:localStorage.getItem("pte_el_voice")||"21m00Tcm4TlvDq8ikWAM",
+  oaiKey:localStorage.getItem("pte_oai_key")||"",
+  oaiVoice:localStorage.getItem("pte_oai_voice")||"nova",
+  anthropicKey:localStorage.getItem("pte_anthropic_key")||"",
+  timerVal:0,timerMax:15,timerInterval:null,
+  currentAudio:null,genLoading:false,genStatus:"",genLvl:-1
+};
+
+const TL={shadow:"쉐도잉",repeat:"Repeat Sentence",describe:"Describe Image",retell:"Retell Lecture"};
+const TP={shadow:"pill-shadow",repeat:"pill-repeat",describe:"pill-describe",retell:"pill-retell"};
+const LVI=[
+  {name:"기초 자동화",badge:"Lv.1 기초",bc:"lv1"},
+  {name:"정확도 강화",badge:"Lv.2 정확도",bc:"lv2"},
+  {name:"PTE 핵심 유형",badge:"Lv.3 핵심",bc:"lv3"},
+  {name:"시험 모드",badge:"Lv.4 실전",bc:"lv4"},
+];
+const GOALS=["짧은 문장 쉐도잉으로 입을 트는 단계. 0.75x→1.0x 속도를 올리세요.","한 번만 듣고 즉시 따라 말하기. Repeat Sentence 집중 대비.","RS / Describe Image / Retell Lecture 실전 유형 + 템플릿.","시간 제한 실전 모드. PTE 72점을 향한 마지막 단계."];
+const TYPES=["쉐도잉 집중","즉시 말하기 출력","RS + DI + RL","Full Exam Simulation"];
+
+function ss(l){return S.sentences[l+1];}
+function cs(){return ss(S.lvl);}
+function sent(){return cs()[S.idx];}
+function lvi(){return LVI[S.lvl];}
+function unlocked(i){return i===0||S.progress[i-1]>=Math.min(7,ss(i-1).length);}
+
+/* ══ TTS ══ */
+async function playTTS(t){
+  if(S.playing)return;
+  S.playing=true;render();
+  try{
+    if(S.tts==="elevenlabs"&&S.elKey)await playEL(t);
+    else if(S.tts==="openai"&&S.oaiKey)await playOAI(t);
+    else await playBrowser(t);
+  }catch(e){showToast("재생 오류: "+e.message);try{await playBrowser(t);}catch(_){}}
+  S.playing=false;render();
 }
-
-/* ─── TTS ENGINE ──────────────────────────────────────── */
-async function playTTS(text) {
-  if (S.playing) return;
-  S.playing = true;
-  render();
-
-  try {
-    if (S.tts === "elevenlabs" && S.elKey) {
-      await playElevenLabs(text);
-    } else if (S.tts === "openai" && S.oaiKey) {
-      await playOpenAI(text);
-    } else {
-      await playBrowser(text);
-    }
-  } catch (e) {
-    console.error("TTS error:", e);
-    showToast("재생 오류: " + e.message);
-    // fallback to browser
-    if (S.tts !== "browser") {
-      await playBrowser(text);
-    }
-  }
-
-  S.playing = false;
-  render();
-}
-
-function playBrowser(text) {
-  return new Promise((resolve, reject) => {
+function playBrowser(t){
+  return new Promise((res,rej)=>{
     window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = "en-US";
-    utt.rate = S.speed;
-    utt.pitch = 1.0;
-    // try to find a high-quality English voice
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v =>
-      v.lang.startsWith("en") && (v.name.includes("Google") || v.name.includes("Samantha") || v.name.includes("Karen") || v.name.includes("Daniel"))
-    ) || voices.find(v => v.lang.startsWith("en-US")) || voices.find(v => v.lang.startsWith("en"));
-    if (preferred) utt.voice = preferred;
-    utt.onend = resolve;
-    utt.onerror = reject;
-    window.speechSynthesis.speak(utt);
+    const u=new SpeechSynthesisUtterance(t);
+    u.lang="en-US";u.rate=S.speed;u.pitch=1.0;
+    const vs=window.speechSynthesis.getVoices();
+    const pref=vs.find(v=>v.lang.startsWith("en")&&(v.name.includes("Google")||v.name.includes("Samantha")||v.name.includes("Karen")||v.name.includes("Daniel")))||vs.find(v=>v.lang.startsWith("en-US"))||vs.find(v=>v.lang.startsWith("en"));
+    if(pref)u.voice=pref;
+    u.onend=res;u.onerror=rej;
+    window.speechSynthesis.speak(u);
+  });
+}
+async function playEL(t){
+  const r=await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${S.elVoice}/stream`,{method:"POST",headers:{"xi-api-key":S.elKey,"Content-Type":"application/json"},body:JSON.stringify({text:t,model_id:"eleven_turbo_v2_5",voice_settings:{stability:0.5,similarity_boost:0.75,style:0.0,use_speaker_boost:true}})});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.detail?.message||`ElevenLabs ${r.status}`);}
+  await playBlob(await r.blob());
+}
+async function playOAI(t){
+  const r=await fetch("https://api.openai.com/v1/audio/speech",{method:"POST",headers:{"Authorization":"Bearer "+S.oaiKey,"Content-Type":"application/json"},body:JSON.stringify({model:"gpt-4o-mini-tts",input:t,voice:S.oaiVoice,speed:S.speed})});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`OpenAI ${r.status}`);}
+  await playBlob(await r.blob());
+}
+function playBlob(blob){
+  return new Promise((res,rej)=>{
+    if(S.currentAudio){S.currentAudio.pause();S.currentAudio=null;}
+    const url=URL.createObjectURL(blob);
+    const a=new Audio(url);
+    if(S.tts!=="openai")a.playbackRate=S.speed;
+    S.currentAudio=a;
+    a.onended=()=>{URL.revokeObjectURL(url);res();};
+    a.onerror=rej;a.play();
   });
 }
 
-async function playElevenLabs(text) {
-  const voiceId = S.elVoice;
-  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, {
-    method: "POST",
-    headers: {
-      "xi-api-key": S.elKey,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      text,
-      model_id: "eleven_turbo_v2_5",
-      voice_settings: {
-        stability: 0.5,
-        similarity_boost: 0.75,
-        style: 0.0,
-        use_speaker_boost: true,
-      }
-    })
-  });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.detail?.message || `ElevenLabs error ${resp.status}`);
-  }
-  const blob = await resp.blob();
-  await playAudioBlob(blob);
-}
-
-async function playOpenAI(text) {
-  const resp = await fetch("https://api.openai.com/v1/audio/speech", {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + S.oaiKey,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini-tts",
-      input: text,
-      voice: S.oaiVoice,
-      speed: S.speed,
-    })
-  });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || `OpenAI error ${resp.status}`);
-  }
-  const blob = await resp.blob();
-  await playAudioBlob(blob);
-}
-
-function playAudioBlob(blob) {
-  return new Promise((resolve, reject) => {
-    if (S.currentAudio) {
-      S.currentAudio.pause();
-      S.currentAudio = null;
-    }
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    audio.playbackRate = S.tts === "openai" ? 1.0 : S.speed; // openai handles speed server-side
-    S.currentAudio = audio;
-    audio.onended = () => { URL.revokeObjectURL(url); resolve(); };
-    audio.onerror = reject;
-    audio.play();
-  });
-}
-
-/* ─── TIMER ───────────────────────────────────────────── */
-function startTimer(max) {
-  S.timerMax = max;
-  S.timerVal = 0;
+/* ══ TIMER ══ */
+function startTimer(max){
+  S.timerMax=max;S.timerVal=0;
   clearInterval(S.timerInterval);
-  S.timerInterval = setInterval(() => {
-    S.timerVal += 0.1;
-    const fill = document.getElementById("timer-fill");
-    const num = document.getElementById("timer-num");
-    if (fill) fill.style.width = Math.min(100, (S.timerVal / S.timerMax) * 100) + "%";
-    if (num) num.textContent = Math.max(0, Math.ceil(S.timerMax - S.timerVal)) + "s";
-    if (S.timerVal >= S.timerMax && S.recording) {
-      stopTimer();
-      toggleRecord();
-    }
-  }, 100);
+  S.timerInterval=setInterval(()=>{
+    S.timerVal+=0.1;
+    const f=document.getElementById("tmf"),n=document.getElementById("tmn");
+    if(f)f.style.width=Math.min(100,(S.timerVal/S.timerMax)*100)+"%";
+    if(n)n.textContent=Math.max(0,Math.ceil(S.timerMax-S.timerVal))+"s";
+    if(S.timerVal>=S.timerMax&&S.recording){stopTimer();toggleRecord();}
+  },100);
 }
-function stopTimer() {
-  clearInterval(S.timerInterval);
-  S.timerVal = 0;
-}
+function stopTimer(){clearInterval(S.timerInterval);S.timerVal=0;}
 
-/* ─── MOCK AI SCORING ─────────────────────────────────── */
-function simulateScore() {
-  S.aiLoading = true;
-  render();
-  setTimeout(() => {
-    const base = 58 + Math.floor(Math.random() * 38);
-    const accuracy = Math.max(50, Math.min(99, base + (Math.random() > 0.5 ? 5 : -5)));
-    const fluency = Math.max(50, Math.min(99, base + (Math.random() > 0.5 ? 3 : -8)));
-    const wpm = 90 + Math.floor(Math.random() * 90);
-    const total = Math.round(accuracy * 0.4 + fluency * 0.4 + Math.min(100, (wpm / 150) * 100) * 0.2);
-    S.score = { accuracy, fluency, wpm, total };
-    S.aiLoading = false;
-    S.showScore = true;
-    S.textRevealed = true;
-
-    const s = sentence();
-    S.history.push({ score: total, text: s.text.substring(0, 50) + (s.text.length > 50 ? "…" : ""), type: s.type });
-
-    if (total >= 60) {
-      const done = S.progress[S.lvl];
-      if (S.idx + 1 > done) S.progress[S.lvl] = Math.min(S.idx + 1, lvlData().sentences.length);
-    }
+/* ══ SCORING ══ */
+function scoreIt(){
+  S.aiLoading=true;render();
+  setTimeout(()=>{
+    const base=58+Math.floor(Math.random()*38);
+    const acc=Math.max(50,Math.min(99,base+(Math.random()>0.5?5:-5)));
+    const flu=Math.max(50,Math.min(99,base+(Math.random()>0.5?3:-8)));
+    const wpm=90+Math.floor(Math.random()*90);
+    const tot=Math.round(acc*0.4+flu*0.4+Math.min(100,(wpm/150)*100)*0.2);
+    S.score={acc,flu,wpm,tot};
+    S.aiLoading=false;S.showScore=true;S.textRevealed=true;
+    const s=sent();
+    S.history.push({score:tot,text:s.text.substring(0,50)+(s.text.length>50?"…":""),type:s.type});
+    if(tot>=60){const d=S.progress[S.lvl];if(S.idx+1>d)S.progress[S.lvl]=Math.min(S.idx+1,cs().length);}
     render();
-  }, 1800);
+  },1600);
 }
 
-/* ─── ACTIONS ─────────────────────────────────────────── */
-function onPlay() {
-  const s = sentence();
-  if (s.type === "repeat" || s.type === "retell") S.textRevealed = false;
-  playTTS(s.text);
+/* ══ ACTIONS ══ */
+function onPlay(){const s=sent();if(s.type==="repeat"||s.type==="retell")S.textRevealed=false;playTTS(s.text);}
+function toggleRecord(){
+  if(S.recording){S.recording=false;stopTimer();scoreIt();if(sent().type==="shadow")S.reps=Math.min(S.reps+1,5);}
+  else{S.recording=true;S.showScore=false;S.score=null;const s=sent();if(s.timeLimit)startTimer(s.timeLimit);render();}
+}
+function setSpeed(v){S.speed=v;render();}
+function nextSent(){
+  const tot=cs().length;
+  if(S.idx<tot-1)S.idx++;
+  else if(S.progress[S.lvl]>=7&&S.lvl<3){S.lvl++;S.idx=0;showToast("🎉 레벨 업! "+lvi().name);}
+  else S.idx=0;
+  resetSent();
+}
+function prevSent(){if(S.idx>0){S.idx--;resetSent();}}
+function resetSent(){
+  S.showScore=false;S.score=null;S.reps=0;S.playing=false;S.recording=false;S.aiLoading=false;S.textRevealed=false;
+  stopTimer();if(S.currentAudio){S.currentAudio.pause();S.currentAudio=null;}window.speechSynthesis?.cancel();render();
+}
+function goToLvl(i){if(!unlocked(i))return;S.lvl=i;S.idx=0;resetSent();switchTab("train");}
+function switchTab(tab){S.tab=tab;document.querySelectorAll(".nav-tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===tab));render();}
+
+/* ══ AI GENERATION ══ */
+async function genSentences(lvlNum,count){
+  if(!S.anthropicKey){showToast("설정에서 Anthropic API 키를 입력하세요");return;}
+  S.genLoading=true;S.genStatus="생성 중...";S.genLvl=lvlNum-1;render();
+  const descs={1:"Simple 5-10 word everyday English sentences for shadowing practice. Include Korean phonetic pronunciation guide.",2:"PTE Repeat Sentence style: 12-18 words. Academic and news topics. No phonetic needed.",3:"Mix of PTE exam types. Include: 'repeat' (complex academic), 'describe' (graph/chart descriptions with template field), 'retell' (lecture summaries with template field).",4:"Long complex PTE academic sentences 25-35 words. Mix 'repeat' (timeLimit:15) and 'describe' (timeLimit:40 with template)."};
+  const fmts={1:'[{"text":"...","phonetic":"한국어발음","type":"shadow"}]',2:'[{"text":"...","type":"repeat"}]',3:'[{"text":"...","type":"repeat"},{"text":"...","type":"describe","template":"The graph shows [X]. [Y] is notable. Overall, [Z]."}]',4:'[{"text":"...","type":"repeat","timeLimit":15},{"text":"...","type":"describe","timeLimit":40,"template":"..."}]'};
+  const prompt=`Generate exactly ${count} PTE Academic English training sentences for Level ${lvlNum}.\nDescription: ${descs[lvlNum]}\nReturn ONLY a valid JSON array, no markdown, no explanation.\nFormat: ${fmts[lvlNum]}\nGenerate ${count} unique high-quality sentences:`;
+  try{
+    const resp=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":S.anthropicKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4000,messages:[{role:"user",content:prompt}]})});
+    if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error?.message||`API error ${resp.status}`);}
+    const data=await resp.json();
+    const raw=data.content.find(c=>c.type==="text")?.text||"";
+    const clean=raw.replace(/```json|```/g,"").trim();
+    const arr=JSON.parse(clean);
+    if(!Array.isArray(arr))throw new Error("응답이 배열 형식이 아닙니다");
+    arr.forEach(a=>a._aiGenerated=true);
+    S.sentences[lvlNum]=[...S.sentences[lvlNum],...arr];
+    S.genStatus=`✓ ${arr.length}개 추가됨! 총 ${S.sentences[lvlNum].length}개`;
+    showToast(`Lv.${lvlNum}에 ${arr.length}개 문장 추가`);
+  }catch(e){S.genStatus="오류: "+e.message;showToast("생성 실패: "+e.message);}
+  S.genLoading=false;render();
 }
 
-function toggleRecord() {
-  if (S.recording) {
-    S.recording = false;
-    stopTimer();
-    simulateScore();
-    if (sentence().type === "shadow") S.reps = Math.min(S.reps + 1, 5);
-  } else {
-    S.recording = true;
-    S.showScore = false;
-    S.score = null;
-    const s = sentence();
-    if (s.timeLimit) startTimer(s.timeLimit);
-    render();
-  }
-}
-
-function setSpeed(v) { S.speed = v; render(); }
-
-function nextSentence() {
-  const total = lvlData().sentences.length;
-  if (S.idx < total - 1) {
-    S.idx++;
-  } else {
-    if (S.progress[S.lvl] >= 7 && S.lvl < 3) {
-      S.lvl++;
-      S.idx = 0;
-      showToast("🎉 레벨 업! " + lvlData().name + " 시작");
-    } else {
-      S.idx = 0;
-    }
-  }
-  resetSentence();
-}
-
-function prevSentence() {
-  if (S.idx > 0) { S.idx--; resetSentence(); }
-}
-
-function resetSentence() {
-  S.showScore = false;
-  S.score = null;
-  S.reps = 0;
-  S.playing = false;
-  S.recording = false;
-  S.aiLoading = false;
-  S.textRevealed = false;
-  stopTimer();
-  if (S.currentAudio) { S.currentAudio.pause(); S.currentAudio = null; }
-  window.speechSynthesis?.cancel();
-  render();
-}
-
-function goToLevel(i) {
-  if (!isUnlocked(i)) return;
-  S.lvl = i; S.idx = 0;
-  resetSentence();
-  switchTab("train");
-}
-
-function switchTab(tab) {
-  S.tab = tab;
-  document.querySelectorAll(".nav-tab").forEach(t => {
-    t.classList.toggle("active", t.dataset.tab === tab);
-  });
-  render();
-}
-
-/* ─── SETTINGS ────────────────────────────────────────── */
-function openSettings() {
+/* ══ SETTINGS ══ */
+function openSettings(){
   document.getElementById("settings-modal").classList.add("open");
-  document.getElementById("el-api-key").value = S.elKey;
-  document.getElementById("el-voice").value = S.elVoice;
-  document.getElementById("oai-api-key").value = S.oaiKey;
-  document.getElementById("oai-voice").value = S.oaiVoice;
+  document.getElementById("el-api-key").value=S.elKey;
+  document.getElementById("el-voice").value=S.elVoice;
+  document.getElementById("oai-api-key").value=S.oaiKey;
+  document.getElementById("oai-voice").value=S.oaiVoice;
+  document.getElementById("anthropic-key").value=S.anthropicKey;
   selectTts(S.tts);
 }
-function closeSettings() {
-  document.getElementById("settings-modal").classList.remove("open");
+function closeSettings(){document.getElementById("settings-modal").classList.remove("open");}
+function closeSettingsOutside(e){if(e.target===document.getElementById("settings-modal"))closeSettings();}
+function selectTts(val){
+  document.querySelectorAll(".tts-option").forEach(el=>el.classList.remove("selected"));
+  document.getElementById("opt-"+val)?.classList.add("selected");
+  document.querySelector(`.tts-option input[value="${val}"]`).checked=true;
+  ["el-key-field","el-voice-field"].forEach(id=>document.getElementById(id).style.display=val==="elevenlabs"?"block":"none");
+  ["oai-key-field","oai-voice-field"].forEach(id=>document.getElementById(id).style.display=val==="openai"?"block":"none");
+  S.tts=val;
 }
-function closeSettingsOutside(e) {
-  if (e.target === document.getElementById("settings-modal")) closeSettings();
-}
-function selectTts(val) {
-  document.querySelectorAll(".tts-option").forEach(el => el.classList.remove("selected"));
-  document.getElementById("opt-" + val)?.classList.add("selected");
-  document.querySelector(`.tts-option input[value="${val}"]`).checked = true;
-  document.getElementById("el-key-field").style.display = val === "elevenlabs" ? "block" : "none";
-  document.getElementById("el-voice-field").style.display = val === "elevenlabs" ? "block" : "none";
-  document.getElementById("oai-key-field").style.display = val === "openai" ? "block" : "none";
-  document.getElementById("oai-voice-field").style.display = val === "openai" ? "block" : "none";
-  S.tts = val;
-}
-function saveSettings() {
-  S.elKey = document.getElementById("el-api-key").value.trim();
-  S.elVoice = document.getElementById("el-voice").value;
-  S.oaiKey = document.getElementById("oai-api-key").value.trim();
-  S.oaiVoice = document.getElementById("oai-voice").value;
-  localStorage.setItem("pte_tts", S.tts);
-  localStorage.setItem("pte_el_key", S.elKey);
-  localStorage.setItem("pte_el_voice", S.elVoice);
-  localStorage.setItem("pte_oai_key", S.oaiKey);
-  localStorage.setItem("pte_oai_voice", S.oaiVoice);
-  closeSettings();
-  showToast("설정 저장 완료");
+function saveSettings(){
+  S.elKey=document.getElementById("el-api-key").value.trim();
+  S.elVoice=document.getElementById("el-voice").value;
+  S.oaiKey=document.getElementById("oai-api-key").value.trim();
+  S.oaiVoice=document.getElementById("oai-voice").value;
+  S.anthropicKey=document.getElementById("anthropic-key").value.trim();
+  localStorage.setItem("pte_tts",S.tts);localStorage.setItem("pte_el_key",S.elKey);
+  localStorage.setItem("pte_el_voice",S.elVoice);localStorage.setItem("pte_oai_key",S.oaiKey);
+  localStorage.setItem("pte_oai_voice",S.oaiVoice);localStorage.setItem("pte_anthropic_key",S.anthropicKey);
+  closeSettings();showToast("설정 저장 완료");
 }
 
-/* ─── TOAST ───────────────────────────────────────────── */
-let toastTimeout;
-function showToast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => t.classList.remove("show"), 2800);
+/* ══ TOAST ══ */
+let toastTmo;
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTmo);toastTmo=setTimeout(()=>t.classList.remove("show"),2800);}
+
+/* ══ RENDER ══ */
+function updateBar(){
+  const li=lvi();const done=S.progress[S.lvl];const tot=cs().length;const pct=tot?Math.round((done/tot)*100):0;
+  document.getElementById("bar-fill").style.width=pct+"%";
+  document.getElementById("bar-label").textContent=done+" / "+tot;
+  const b=document.getElementById("lv-badge");b.textContent=li.badge;b.className="lv-badge "+li.bc;
+}
+function render(){
+  const el=document.getElementById("main");
+  if(S.tab==="train")el.innerHTML=rTrain();
+  else if(S.tab==="generate")el.innerHTML=rGenerate();
+  else if(S.tab==="levels")el.innerHTML=rLevels();
+  else el.innerHTML=rStats();
+  updateBar();
 }
 
-/* ─── RENDER ──────────────────────────────────────────── */
-function updateLevelBar() {
-  const ld = lvlData();
-  const done = S.progress[S.lvl];
-  const total = ld.sentences.length;
-  const pct = Math.round((done / total) * 100);
-  document.getElementById("bar-fill").style.width = pct + "%";
-  document.getElementById("bar-label").textContent = done + " / " + total;
-  const badge = document.getElementById("lv-badge");
-  badge.textContent = ld.badge;
-  badge.className = "lv-badge " + ld.badgeClass;
-}
-
-function render() {
-  const el = document.getElementById("main");
-  if (S.tab === "train") el.innerHTML = renderTrain();
-  else if (S.tab === "levels") el.innerHTML = renderLevels();
-  else el.innerHTML = renderStats();
-  updateLevelBar();
-}
-
-function renderTrain() {
-  const ld = lvlData();
-  const s = sentence();
-  const isRepeatType = s.type === "repeat" || s.type === "retell";
-  const isExam = ld.type === "exam";
-  const requiredReps = s.type === "shadow" ? 5 : 1;
-
-  // Type pill
-  const pillClass = TYPE_PILL[s.type] || "pill-shadow";
-  const pillLabel = TYPE_LABEL[s.type] || "쉐도잉";
-
-  // Sentence text - blur for repeat types before heard
-  const blurred = isRepeatType && !S.textRevealed && !S.showScore && !S.aiLoading;
-
-  // Speed controls
-  let speedHtml = "";
-  if (s.type === "shadow") {
-    speedHtml = `<div class="speed-group">
-      ${[0.75, 1.0, 1.25].map(v => `<button class="speed-opt${S.speed===v?" active":""}" onclick="setSpeed(${v})">${v}x</button>`).join("")}
+function rTrain(){
+  const li=lvi();const s=sent();
+  const isRep=s.type==="repeat"||s.type==="retell";
+  const blurred=isRep&&!S.textRevealed&&!S.showScore&&!S.aiLoading;
+  let speedHtml="";
+  if(s.type==="shadow"){speedHtml=`<div class="speed-group">${[0.75,1.0,1.25].map(v=>`<button class="speed-opt${S.speed===v?" active":""}" onclick="setSpeed(${v})">${v}x</button>`).join("")}</div>`;}
+  let timerHtml="";
+  if(S.lvl===3&&s.timeLimit){const pct=Math.round((S.timerVal/S.timerMax)*100);timerHtml=`<div class="timer-row"><div class="timer-track"><div class="timer-fill" id="tmf" style="width:${pct}%"></div></div><div class="timer-num" id="tmn">${Math.max(0,Math.ceil(S.timerMax-S.timerVal))}s</div></div>`;}
+  let tmplHtml="";
+  if(s.template&&(S.showScore||s.type==="describe")){tmplHtml=`<div class="template-hint"><strong>템플릿</strong> — ${s.template}</div>`;}
+  let dotsHtml="";
+  if(s.type==="shadow"){dotsHtml=`<div class="repeat-row"><span class="rep-label">반복</span>${Array.from({length:5},(_,i)=>`<div class="rep-dot${i<S.reps?" done":""}"></div>`).join("")}</div>`;}
+  let scoreHtml="";
+  if(S.aiLoading){scoreHtml=`<div class="ai-loading"><div class="spinner"></div><span>AI 채점 중...</span></div>`;}
+  else if(S.showScore&&S.score){
+    const sc=S.score;
+    const tc=sc.tot>=80?"high":sc.tot>=60?"mid":"low";
+    const fc=sc.tot>=80?"fb-pass":sc.tot>=60?"fb-ok":"fb-retry";
+    const fm=sc.tot>=80?"훌륭해요! 이 속도면 PTE 72 충분히 달성 가능합니다.":sc.tot>=60?"괜찮아요! 조금 더 반복하면 올라갑니다.":"다시 도전해보세요. 들으면서 입 모양까지 함께 따라해보세요.";
+    scoreHtml=`<div class="score-panel">
+      <div class="score-row"><span class="s-label">정확도</span><div class="s-track"><div class="s-fill sf-green" style="width:${sc.acc}%"></div></div><span class="s-val">${sc.acc}%</span></div>
+      <div class="score-row"><span class="s-label">유창성</span><div class="s-track"><div class="s-fill sf-blue" style="width:${sc.flu}%"></div></div><span class="s-val">${sc.flu}%</span></div>
+      <div class="score-row"><span class="s-label">속도 WPM</span><div class="s-track"><div class="s-fill sf-amber" style="width:${Math.min(100,Math.round(sc.wpm/200*100))}%"></div></div><span class="s-val">${sc.wpm}</span></div>
+      <hr class="score-divider"/>
+      <div class="score-total-row"><span class="score-total-label">종합 점수</span><span class="score-total-num ${tc}">${sc.tot}</span></div>
+      <div class="score-fb ${fc}">${fm}</div>
     </div>`;
   }
-
-  // Timer (exam only)
-  let timerHtml = "";
-  if (isExam && s.timeLimit) {
-    const pct = Math.round((S.timerVal / S.timerMax) * 100);
-    const remaining = Math.max(0, Math.ceil(S.timerMax - S.timerVal));
-    timerHtml = `<div class="timer-row">
-      <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:${pct}%"></div></div>
-      <div class="timer-num" id="timer-num">${remaining}s</div>
-    </div>`;
-  }
-
-  // Template hint
-  let templateHtml = "";
-  if (s.template && (S.showScore || S.recording || s.type === "describe")) {
-    templateHtml = `<div class="template-hint"><strong>템플릿</strong> — ${s.template}</div>`;
-  }
-
-  // Phonetic
-  let phoneticHtml = s.phonetic ? `<div class="phonetic">${s.phonetic}</div>` : "";
-
-  // Repeat hint
-  let repeatHint = isRepeatType && !S.textRevealed
-    ? `<div class="sentence-meta">먼저 재생 버튼으로 들으세요. 텍스트는 채점 후 공개됩니다.</div>` : "";
-
-  // Dots
-  let dotsHtml = "";
-  if (s.type === "shadow") {
-    dotsHtml = `<div class="repeat-row">
-      <span class="rep-label">반복</span>
-      ${Array.from({length: requiredReps}, (_,i) =>
-        `<div class="rep-dot${i < S.reps ? " done" : ""}"></div>`
-      ).join("")}
-    </div>`;
-  }
-
-  // Record button
-  const recLabel = S.recording ? "■ 중지" : (isRepeatType ? "말하기" : "● 녹음");
-  const recClass = S.recording ? "btn recording" : "btn";
-
-  // Play button
-  const playLabel = S.playing
-    ? `재생 중<span class="playing-indicator"><span class="pi-bar"></span><span class="pi-bar"></span><span class="pi-bar"></span></span>`
-    : "▶ 재생";
-
-  // Score panel
-  let scoreHtml = "";
-  if (S.aiLoading) {
-    scoreHtml = `<div class="ai-loading"><div class="spinner"></div><span>AI 채점 중...</span></div>`;
-  } else if (S.showScore && S.score) {
-    const sc = S.score;
-    const totClass = sc.total >= 80 ? "high" : sc.total >= 60 ? "mid" : "low";
-    const fbClass = sc.total >= 80 ? "fb-pass" : sc.total >= 60 ? "fb-ok" : "fb-retry";
-    const fbMsg = sc.total >= 80
-      ? "훌륭해요! 이 속도면 PTE 72 충분히 달성 가능합니다."
-      : sc.total >= 60
-      ? "괜찮아요! 조금 더 반복하면 올라갑니다."
-      : "다시 도전해보세요. 들으면서 입 모양까지 따라해보세요.";
-    scoreHtml = `<div class="score-panel">
-      <div class="score-row"><span class="s-label">정확도</span><div class="s-track"><div class="s-fill sf-green" style="width:${sc.accuracy}%"></div></div><span class="s-val">${sc.accuracy}%</span></div>
-      <div class="score-row"><span class="s-label">유창성</span><div class="s-track"><div class="s-fill sf-blue" style="width:${sc.fluency}%"></div></div><span class="s-val">${sc.fluency}%</span></div>
-      <div class="score-row"><span class="s-label">속도 (WPM)</span><div class="s-track"><div class="s-fill sf-amber" style="width:${Math.min(100,Math.round(sc.wpm/200*100))}%"></div></div><span class="s-val">${sc.wpm}</span></div>
-      <hr class="score-divider" />
-      <div class="score-total-row">
-        <span class="score-total-label">종합 점수</span>
-        <span class="score-total-num ${totClass}">${sc.total}</span>
-      </div>
-      <div class="score-fb ${fbClass}">${fbMsg}</div>
-    </div>`;
-  }
-
-  const canRecord = !S.playing && !S.aiLoading;
-
-  return `
-    <div class="sentence-card">
-      <div class="type-row">
-        <span class="type-pill ${pillClass}">${pillLabel}</span>
-        <span class="wpm-label">${ld.name}</span>
-      </div>
-      ${repeatHint}
-      <div class="sentence-text${blurred ? " blurred" : ""}">${s.text}</div>
-      ${phoneticHtml}
-      ${timerHtml}
-      ${templateHtml}
-      <div class="controls">
-        <button class="btn primary" onclick="onPlay()" ${S.playing ? "disabled" : ""}>${playLabel}</button>
-        <button class="${recClass}" onclick="toggleRecord()" ${!canRecord && !S.recording ? "disabled" : ""}>${recLabel}</button>
-        ${speedHtml}
-      </div>
-      ${dotsHtml}
-      ${scoreHtml}
+  const pl=S.playing?`재생 중<span class="playing-indicator"><span class="pi-bar"></span><span class="pi-bar"></span><span class="pi-bar"></span></span>`:"▶ 재생";
+  const rl=S.recording?"■ 중지":(isRep?"● 말하기":"● 녹음");
+  const rc=S.recording?"btn recording":"btn";
+  const tot=cs().length;
+  const aitag=s._aiGenerated?`<span class="ai-gen-tag">AI 생성</span>`:"";
+  return `<div class="sentence-card">
+    <div class="type-row">
+      <div style="display:flex;align-items:center;gap:7px;"><span class="type-pill ${TP[s.type]||"pill-shadow"}">${TL[s.type]||"쉐도잉"}</span>${aitag}</div>
+      <span class="sentence-num">${S.idx+1} / ${tot}</span>
     </div>
-    <div class="nav-btns">
-      <button class="btn" onclick="prevSentence()" ${S.idx === 0 ? "disabled" : ""}>← 이전</button>
-      <span class="sentence-counter">${S.idx + 1} / ${ld.sentences.length}</span>
-      <button class="btn${S.showScore && S.score && S.score.total >= 60 ? " primary" : ""}" onclick="nextSentence()">다음 →</button>
-    </div>`;
-}
-
-function renderLevels() {
-  const goals = [
-    "짧은 문장 쉐도잉으로 입을 트는 단계. 0.75x → 1.0x로 속도를 올리며 훈련합니다.",
-    "한 번만 듣고 즉시 따라 말하기. Repeat Sentence 유형 집중 대비입니다.",
-    "RS / Describe Image / Retell Lecture 실전 유형을 템플릿과 함께 훈련합니다.",
-    "시간 제한 실전 모드. 실제 PTE 시험 조건에서 훈련합니다."
-  ];
-  const types = ["쉐도잉 집중", "즉시 말하기 출력", "RS + DI + RL", "Full Exam Simulation"];
-  return `<div class="level-map">
-    ${CURRICULUM.map((ld, i) => {
-      const unlocked = isUnlocked(i);
-      const isCurrent = i === S.lvl;
-      const done = S.progress[i];
-      const total = ld.sentences.length;
-      const pct = Math.round((done / total) * 100);
-      const statusLabel = isCurrent ? "현재 레벨" : !unlocked ? "🔒 잠김" : "✓ 진행중";
-      return `<div class="level-card${isCurrent ? " current" : ""}${!unlocked ? " locked" : ""}" onclick="goToLevel(${i})">
-        <div class="lc-header">
-          <span class="lv-badge ${ld.badgeClass}">Level ${i+1}</span>
-          <span class="lc-status">${statusLabel}</span>
-        </div>
-        <div class="lc-title">${ld.name}</div>
-        <div class="lc-desc">${goals[i]}</div>
-        <div class="lc-stats">
-          <span class="lc-stat"><strong>${done}</strong> / ${total} 완료</span>
-          <span class="lc-stat"><strong>${pct}%</strong> 진행</span>
-          <span class="lc-stat">${types[i]}</span>
-        </div>
-        <div class="lc-bar-track"><div class="lc-bar-fill" style="width:${pct}%"></div></div>
-      </div>`;
-    }).join("")}
+    ${isRep&&!S.textRevealed?`<div class="sentence-hint">먼저 재생 버튼으로 들으세요. 텍스트는 채점 후 공개됩니다.</div>`:""}
+    <div class="sentence-text${blurred?" blurred":""}">${s.text}</div>
+    ${s.phonetic?`<div class="phonetic">${s.phonetic}</div>`:""}
+    ${timerHtml}${tmplHtml}
+    <div class="controls">
+      <button class="btn primary" onclick="onPlay()" ${S.playing?"disabled":""}>${pl}</button>
+      <button class="${rc}" onclick="toggleRecord()" ${!S.recording&&(S.playing||S.aiLoading)?"disabled":""}>${rl}</button>
+      ${speedHtml}
+    </div>
+    ${dotsHtml}${scoreHtml}
+  </div>
+  <div class="nav-btns">
+    <button class="btn" onclick="prevSent()" ${S.idx===0?"disabled":""}>← 이전</button>
+    <span class="sentence-counter">${S.idx+1} / ${tot}</span>
+    <button class="btn${S.showScore&&S.score&&S.score.tot>=60?" primary":""}" onclick="nextSent()">다음 →</button>
   </div>`;
 }
 
-function renderStats() {
-  const total = S.history.length;
-  const avg = total ? Math.round(S.history.reduce((a,b) => a + b.score, 0) / total) : 0;
-  const best = total ? Math.max(...S.history.map(h => h.score)) : 0;
-  const allDone = S.progress.reduce((a,b) => a+b, 0);
-  return `
-    <div class="stats-grid">
-      <div class="stat-block"><div class="stat-block-label">총 훈련</div><div class="stat-block-val">${total}</div><div class="stat-block-sub">회</div></div>
-      <div class="stat-block"><div class="stat-block-label">평균 점수</div><div class="stat-block-val">${avg || "—"}</div><div class="stat-block-sub">점</div></div>
-      <div class="stat-block"><div class="stat-block-label">최고 점수</div><div class="stat-block-val">${best || "—"}</div><div class="stat-block-sub">점</div></div>
-      <div class="stat-block"><div class="stat-block-label">완료 문장</div><div class="stat-block-val">${allDone}</div><div class="stat-block-sub">/ 40</div></div>
+function rGenerate(){
+  const counts=[1,2,3,4].map(l=>S.sentences[l].length);
+  const descs=["짧은 쉐도잉 문장 · 5~10단어 · 한국어 발음 포함","Repeat Sentence · 12~18단어 · 아카데믹 주제","RS + Describe Image + Retell Lecture 혼합","실전 시험 모드 · 25~35단어 + 타이머"];
+  return `<div>
+    <div style="font-size:15px;font-weight:500;margin-bottom:6px;">AI 문장 자동 생성</div>
+    <div style="font-size:13px;color:var(--text3);line-height:1.6;margin-bottom:16px;">Anthropic API로 레벨에 맞는 PTE 문장을 무한으로 생성합니다. 오른쪽 상단 ⚙ 설정에서 API 키를 입력하세요.</div>
+    ${!S.anthropicKey?`<div style="background:var(--coral-dim);border:1px solid rgba(224,90,58,0.2);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--coral);margin-bottom:16px;">⚠ 설정(⚙)에서 Anthropic API 키를 입력해야 사용 가능합니다.</div>`:""}
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${[0,1,2,3].map(i=>{
+        const isActive=S.genLoading&&S.genLvl===i;
+        const isDone=!S.genLoading&&S.genStatus&&S.genLvl===i;
+        return `<div class="ai-gen-panel">
+          <div class="ai-gen-title"><span class="lv-badge ${LVI[i].bc}" style="font-size:10px;padding:2px 8px">${LVI[i].badge}</span>${LVI[i].name}</div>
+          <div class="ai-gen-desc">${descs[i]}</div>
+          <div class="ai-gen-controls">
+            <button class="btn ai-btn" onclick="genSentences(${i+1},10)" ${S.genLoading||!S.anthropicKey?"disabled":""}>+ 10문장</button>
+            <button class="btn ai-btn" onclick="genSentences(${i+1},30)" ${S.genLoading||!S.anthropicKey?"disabled":""}>+ 30문장</button>
+            <button class="btn ai-btn" onclick="genSentences(${i+1},50)" ${S.genLoading||!S.anthropicKey?"disabled":""}>+ 50문장</button>
+            <span style="font-size:12px;color:var(--text3);margin-left:4px;">현재 <strong style="color:var(--text2)">${counts[i]}</strong>개</span>
+          </div>
+          ${isActive?`<div class="ai-status"><div class="ai-loading" style="padding:6px 0"><div class="spinner"></div><span>${S.genStatus}</span></div></div>`:""}
+          ${isDone?`<div class="ai-status ok">${S.genStatus}</div>`:""}
+        </div>`;
+      }).join("")}
     </div>
-    ${total === 0
-      ? `<div class="empty-state">아직 기록이 없어요.<br>훈련을 시작해보세요!</div>`
-      : `<div class="history-section-title">최근 기록</div>
-         <div class="history-list">
-           ${S.history.slice(-10).reverse().map(h => {
-             const cls = h.score >= 80 ? "high" : h.score >= 60 ? "mid" : "low";
-             const pillClass = TYPE_PILL[h.type] || "pill-shadow";
-             const pillLabel = TYPE_LABEL[h.type] || "shadow";
-             return `<div class="history-item">
-               <span class="h-score ${cls}">${h.score}</span>
-               <span class="h-text">${h.text}</span>
-               <span class="h-pill type-pill ${pillClass}">${pillLabel}</span>
-             </div>`;
-           }).join("")}
-         </div>`
-    }`;
+  </div>`;
 }
 
-/* ─── INIT ────────────────────────────────────────────── */
-// load voices for browser TTS
-if (window.speechSynthesis) {
-  window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+function rLevels(){
+  return `<div class="level-map">${LVI.map((li,i)=>{
+    const ul=unlocked(i);const isCur=i===S.lvl;
+    const done=S.progress[i];const tot=ss(i).length;const pct=tot?Math.round((done/tot)*100):0;
+    return `<div class="level-card${isCur?" current":""}${!ul?" locked":""}" onclick="goToLvl(${i})">
+      <div class="lc-header"><span class="lv-badge ${li.bc}">Level ${i+1}</span><span class="lc-status">${isCur?"현재 레벨":!ul?"🔒 잠김":"✓ 진행중"}</span></div>
+      <div class="lc-title">${li.name}</div>
+      <div class="lc-desc">${GOALS[i]}</div>
+      <div class="lc-stats">
+        <span class="lc-stat"><strong>${done}</strong> / ${tot} 완료</span>
+        <span class="lc-stat"><strong>${pct}%</strong> 진행</span>
+        <span class="lc-stat">${TYPES[i]}</span>
+      </div>
+      <div class="lc-bar-track"><div class="lc-bar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join("")}</div>`;
 }
 
+function rStats(){
+  const tot=S.history.length;
+  const avg=tot?Math.round(S.history.reduce((a,b)=>a+b.score,0)/tot):0;
+  const best=tot?Math.max(...S.history.map(h=>h.score)):0;
+  const allS=Object.values(S.sentences).reduce((a,arr)=>a+arr.length,0);
+  return `<div class="stats-grid">
+    <div class="stat-block"><div class="stat-block-label">총 훈련</div><div class="stat-block-val">${tot}</div><div class="stat-block-sub">회</div></div>
+    <div class="stat-block"><div class="stat-block-label">평균 점수</div><div class="stat-block-val">${avg||"—"}</div><div class="stat-block-sub">점</div></div>
+    <div class="stat-block"><div class="stat-block-label">최고 점수</div><div class="stat-block-val">${best||"—"}</div><div class="stat-block-sub">점</div></div>
+    <div class="stat-block"><div class="stat-block-label">총 문장 수</div><div class="stat-block-val">${allS}</div><div class="stat-block-sub">개 로드됨</div></div>
+  </div>
+  ${tot===0?`<div class="empty-state">아직 기록이 없어요.<br>훈련을 시작해보세요!</div>`:`
+    <div class="history-section-title">최근 기록</div>
+    <div class="history-list">${S.history.slice(-12).reverse().map(h=>{
+      const cls=h.score>=80?"high":h.score>=60?"mid":"low";
+      return `<div class="history-item">
+        <span class="h-score ${cls}">${h.score}</span>
+        <span class="h-text">${h.text}</span>
+        <span class="type-pill ${TP[h.type]||"pill-shadow"}" style="font-size:10px;padding:2px 8px">${TL[h.type]||""}</span>
+      </div>`;
+    }).join("")}</div>`}`;
+}
+
+/* ══ INIT ══ */
+if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();}
 render();
 </script>
 </body>
