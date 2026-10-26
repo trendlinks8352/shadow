@@ -1,107 +1,79 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PTE Each 72 공부시간 트래커</title>
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e5e9f2;--accent:#3b65f5;--accent2:#8ba2ff;--good:#15956b}
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e5e9f2;--accent:#3b65f5;--accent2:#8ba2ff}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
-main{max-width:980px;margin:0 auto;padding:24px 16px 48px}h1{font-size:clamp(1.55rem,4vw,2.15rem);margin:0 0 8px}p{line-height:1.6}.muted{color:var(--muted);font-size:.92rem}
+main{max-width:1000px;margin:auto;padding:24px 16px 48px}h1{font-size:clamp(1.5rem,4vw,2.1rem);margin:0 0 8px}h2{font-size:1.15rem;margin:0}p{line-height:1.6}.muted{color:var(--muted);font-size:.9rem}
 .hero{background:#18264b;color:white;padding:24px;border-radius:20px;margin-bottom:16px}.hero p{color:#dce4ff;margin-bottom:0}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 4px 16px #17203308}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 4px 16px #17203308}
 .metric{font-size:1.7rem;font-weight:750;margin-top:6px}.metric small{font-size:.85rem;font-weight:500;color:var(--muted)}
-label{display:block;font-weight:650;margin:12px 0 6px}input,select,button{font:inherit}input,select{width:100%;padding:11px 12px;border:1px solid #cfd6e5;border-radius:10px;background:#fff;color:var(--ink)}
+label{display:block;font-weight:650;margin:12px 0 6px}input,select,button{font:inherit}input,select{width:100%;padding:11px 12px;border:1px solid #cfd6e5;border-radius:10px;background:white;color:var(--ink)}
 button{border:0;border-radius:10px;padding:11px 15px;background:var(--accent);color:white;font-weight:700;cursor:pointer}button.secondary{background:#eef1fa;color:#27345a}button.danger{background:#fff0f0;color:#a32b2b}
-.formgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:end}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.progress{height:14px;background:#edf0f7;border-radius:999px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .2s}
+.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.progress{height:14px;background:#edf0f7;border-radius:999px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px}
 .chart{display:flex;align-items:end;gap:5px;height:210px;padding:12px 4px 0;border-bottom:1px solid var(--line);overflow-x:auto}
-.barwrap{min-width:24px;flex:1;max-width:50px;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:5px}
-.bar{width:100%;min-height:2px;border-radius:5px 5px 0 0;background:var(--accent2);position:relative}
-.bar.today{background:var(--accent)}.bar .tip{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#18264b;color:white;font-size:11px;padding:4px 6px;border-radius:5px;white-space:nowrap}.bar:hover .tip{display:block}
-.day{font-size:10px;color:var(--muted);white-space:nowrap}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);font-size:.9rem}th{color:var(--muted);font-weight:650}
-.tablewrap{overflow-x:auto}.smallbtn{padding:6px 9px;font-size:.8rem}
+.barwrap{min-width:24px;flex:1;max-width:50px;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:5px}.bar{width:100%;min-height:2px;border-radius:5px 5px 0 0;background:var(--accent2);position:relative}.bar.today{background:var(--accent)}
+.bar .tip{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#18264b;color:white;font-size:11px;padding:4px 6px;border-radius:5px;white-space:nowrap}.bar:hover .tip{display:block}.day{font-size:10px;color:var(--muted);white-space:nowrap}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);font-size:.9rem}th{color:var(--muted);font-weight:650}.tablewrap{overflow-x:auto}.smallbtn{padding:6px 9px;font-size:.8rem}
 .note{background:#fff8e8;border:1px solid #f1dfae;border-radius:12px;padding:12px 14px;font-size:.9rem;line-height:1.55}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:15px}.chart{height:175px}}
-</style>
-</head>
+@media(max-width:700px){.grid{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr 1fr}.card{padding:15px}.chart{height:175px}}
+</style></head>
 <body><main>
-  <section class="hero">
-    <h1>PTE Each 72 공부시간 트래커</h1>
-    <p>호주 MD 입학 영어 점수 목표를 위해 <b>집중 공부시간</b>을 기록하고, 일별 막대그래프와 누적 목표를 확인하세요.</p>
-  </section>
-
-  <section class="grid">
-    <div class="card"><div class="muted">누적 공부시간</div><div class="metric" id="total">0 <small>시간</small></div></div>
-    <div class="card"><div class="muted">목표 달성률</div><div class="metric" id="rate">0%</div><div class="progress"><span id="progress"></span></div></div>
-    <div class="card"><div class="muted">기록한 날짜</div><div class="metric" id="days">0 <small>일</small></div><div class="muted" id="average">하루 평균 0시간</div></div>
-  </section>
-
-  <section class="card">
-    <div class="sectionhead"><h2 style="margin:0;font-size:1.15rem">오늘 공부 기록</h2><span class="muted">실제 집중한 시간만 입력</span></div>
-    <div class="formgrid">
-      <div><label for="date">날짜</label><input id="date" type="date"></div>
-      <div><label for="hours">공부시간 (시간)</label><input id="hours" type="number" min="0" max="24" step="0.25" placeholder="예: 3.5"></div>
-      <div><label for="goal">누적 목표 (시간)</label><input id="goal" type="number" min="1" max="10000" step="10" value="250"></div>
-      <div><label for="task">주요 공부 내용</label><select id="task"><option>종합 / 모의고사</option><option>Speaking (RA, RS, DI, RL)</option><option>Writing (SWT, WE)</option><option>Reading (FIB, RO)</option><option>Listening (WFD, FIB-L, HIW, SST)</option><option>오답 복습 / 어휘</option></select></div>
-    </div>
-    <div class="actions"><button id="save">기록 저장</button><button class="secondary" id="today">오늘 날짜</button><button class="secondary" id="export">CSV 내보내기</button></div>
-  </section>
-
-  <section class="card" style="margin-top:16px">
-    <div class="sectionhead"><h2 style="margin:0;font-size:1.15rem">일별 공부시간 막대그래프</h2><span class="muted">최근 30일 · 막대에 마우스를 올리면 상세 표시</span></div>
-    <div id="chart" class="chart" aria-label="일별 공부시간 그래프"></div>
-    <p class="muted" style="margin-bottom:0">※ 기록이 없는 날짜는 0시간으로 표시됩니다. 날짜별 기록은 이 브라우저에 저장됩니다.</p>
-  </section>
-
-  <section class="card" style="margin-top:16px">
-    <div class="sectionhead"><h2 style="margin:0;font-size:1.15rem">기록 목록</h2><button class="danger smallbtn" id="clear">전체 기록 삭제</button></div>
-    <div class="tablewrap"><table><thead><tr><th>날짜</th><th>시간</th><th>공부 내용</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
-  </section>
-
-  <section class="note" style="margin-top:16px">
-    <b>시간 목표는 점수 보장이 아닙니다.</b> 이전에 알려준 PTE 약 45점 수준을 기준으로 보면 Each 72는 큰 도약입니다. 우선 <b>250시간을 계획용 기준점</b>으로 두고, 2주마다 공식 모의고사나 실전형 진단 결과로 목표를 조정하세요. 현재 점수와 영역별 점수에 따라 필요한 시간은 크게 달라질 수 있습니다. 목표 시간을 채웠다는 이유만으로 시험 준비가 끝났다고 판단하지 말고, 네 영역이 각각 72 이상으로 안정적으로 나오는지 확인하세요.
-  </section>
+<section class="hero"><h1>PTE Each 72 공부시간 트래커</h1><p>하루에 여러 번 공부해도 세션마다 추가하세요. 일별 합계와 집중 학습시간을 자동으로 계산합니다.</p></section>
+<section class="grid">
+<div class="card"><div class="muted">누적 실제 공부시간</div><div class="metric" id="total">0 <small>시간</small></div><div class="muted">집중 + 영어 노출</div></div>
+<div class="card"><div class="muted">집중 학습시간</div><div class="metric" id="focused">0 <small>시간</small></div><div class="muted">집중도 가중치 반영</div></div>
+<div class="card"><div class="muted">목표 달성률</div><div class="metric" id="rate">0%</div><div class="progress"><span id="progress"></span></div><div class="muted" id="days">기록한 날짜 0일</div></div>
+</section>
+<section class="card">
+<div class="sectionhead"><h2>공부 세션 추가</h2><span class="muted">아침·점심·저녁 등 여러 번 기록 가능</span></div>
+<div class="formgrid">
+<div><label for="date">날짜</label><input id="date" type="date"></div>
+<div><label for="hours">이번 세션 시간</label><input id="hours" type="number" min="0.05" max="24" step="0.05" placeholder="예: 0.5"></div>
+<div><label for="kind">공부 유형</label><select id="kind"><option value="PTE 문제 풀이 / 오답">PTE 문제 풀이 / 오답</option><option value="Reading 정독">Reading 정독</option><option value="단어 암기">단어 암기</option><option value="Speaking 낭독 / 쉐도잉">Speaking 낭독 / 쉐도잉</option><option value="Listening 집중 청취">Listening 집중 청취</option><option value="Writing 연습">Writing 연습</option><option value="영어 BGM / 수동 청취">영어 BGM / 수동 청취</option><option value="기타 영어 공부">기타 영어 공부</option></select></div>
+<div><label for="focus">집중도</label><select id="focus"><option value="1">집중해서 학습 (100%)</option><option value="0.75">대체로 집중 (75%)</option><option value="0.5">부분적으로 집중 (50%)</option><option value="0.2">배경 청취 위주 (20%)</option><option value="0">틀어놓기만 함 (0%)</option></select></div>
+<div><label for="goal">누적 집중시간 목표</label><input id="goal" type="number" min="1" max="10000" step="10" value="250"></div>
+<div><label for="memo">메모 (선택)</label><input id="memo" type="text" maxlength="100" placeholder="예: RS 30문제, 오답 복습"></div>
+</div>
+<div class="actions"><button id="save">세션 추가</button><button class="secondary" id="today">오늘 날짜</button><button class="secondary" id="export">CSV 내보내기</button></div>
+<p class="muted" style="margin-bottom:0">각 세션은 별도로 저장되며, 같은 날짜에 여러 번 추가해도 합산됩니다. ‘집중 학습시간’은 공부시간 × 선택한 집중도로 계산합니다.</p>
+</section>
+<section class="card" style="margin-top:16px"><div class="sectionhead"><h2>일별 공부시간 막대그래프</h2><span class="muted">최근 30일 · 막대에 마우스를 올려 상세 확인</span></div><div id="chart" class="chart"></div></section>
+<section class="card" style="margin-top:16px"><div class="sectionhead"><h2>세션 기록</h2><button class="danger smallbtn" id="clear">전체 기록 삭제</button></div>
+<div class="tablewrap"><table><thead><tr><th>날짜</th><th>유형 / 메모</th><th>실제 시간</th><th>집중 환산</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<section class="note" style="margin-top:16px"><b>참고:</b> 집중도 가중치는 공식 PTE 환산 방식이 아니라 학습관리용 추정치입니다. 영어 BGM은 실제로 집중해서 듣지 않았다면 집중 학습시간에 거의 포함하지 않는 것이 좋습니다. 기록은 현재 브라우저에 저장되며, 다른 기기와 자동 동기화되지 않습니다.</section>
 </main>
 <script>
-const KEY='pte72-study-tracker-v1';
-const $=id=>document.getElementById(id);
-let records={};
-try{records=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){records={}}
+const KEY='pte72-study-tracker-v2';const $=id=>document.getElementById(id);
 const isoToday=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+let sessions=[];
+try{const old=JSON.parse(localStorage.getItem(KEY)||'[]');sessions=Array.isArray(old)?old:[]}catch(e){sessions=[]}
 $('date').value=isoToday();
-function persist(){localStorage.setItem(KEY,JSON.stringify(records));render()}
-function totalHours(){return Object.values(records).reduce((s,r)=>s+(Number(r.hours)||0),0)}
+function persist(){localStorage.setItem(KEY,JSON.stringify(sessions));render()}
+function n(v){return Number(v)||0}
 function render(){
- const entries=Object.entries(records).sort((a,b)=>b[0].localeCompare(a[0]));
- const total=totalHours(),goal=Math.max(1,Number($('goal').value)||250),days=entries.filter(([d,r])=>Number(r.hours)>0).length;
- $('total').innerHTML=`${total.toLocaleString('ko-KR',{maximumFractionDigits:2})} <small>시간</small>`;
- $('rate').textContent=`${Math.min(100,total/goal*100).toFixed(1)}%`;
- $('progress').style.width=`${Math.min(100,total/goal*100)}%`;
- $('days').innerHTML=`${days} <small>일</small>`;
- $('average').textContent=`기록한 날짜 기준 하루 평균 ${(days?total/days:0).toFixed(2)}시간`;
- const chart=$('chart');chart.innerHTML='';
- const end=new Date($('date').value||isoToday()+'T12:00:00');end.setHours(12,0,0,0);
+ const total=sessions.reduce((s,x)=>s+n(x.hours),0),focused=sessions.reduce((s,x)=>s+n(x.hours)*n(x.focus),0);
+ const days=new Set(sessions.filter(x=>n(x.hours)>0).map(x=>x.date)).size,goal=Math.max(1,n($('goal').value)||250);
+ $('total').innerHTML=`${total.toFixed(2).replace(/\.?0+$/,'')} <small>시간</small>`;
+ $('focused').innerHTML=`${focused.toFixed(2).replace(/\.?0+$/,'')} <small>시간</small>`;
+ $('rate').textContent=`${Math.min(100,focused/goal*100).toFixed(1)}%`;$('progress').style.width=`${Math.min(100,focused/goal*100)}%`;$('days').textContent=`기록한 날짜 ${days}일`;
+ const chart=$('chart');chart.innerHTML='';const end=new Date(($('date').value||isoToday())+'T12:00:00');
  const dates=[];for(let i=29;i>=0;i--){const d=new Date(end);d.setDate(d.getDate()-i);dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)}
- const max=Math.max(4,...dates.map(d=>Number(records[d]?.hours)||0));
- dates.forEach(d=>{const h=Number(records[d]?.hours)||0,wrap=document.createElement('div');wrap.className='barwrap';
- const bar=document.createElement('div');bar.className='bar'+(d===isoToday()?' today':'');bar.style.height=`${Math.max(h?3:1,h/max*100)}%`;
- const tip=document.createElement('span');tip.className='tip';tip.textContent=`${d}: ${h}시간`;bar.appendChild(tip);
- const label=document.createElement('div');label.className='day';label.textContent=d.slice(5).replace('-','/');
- wrap.append(bar,label);chart.appendChild(wrap)});
+ const sums=dates.map(d=>sessions.filter(x=>x.date===d).reduce((s,x)=>s+n(x.hours),0)),max=Math.max(4,...sums);
+ dates.forEach((d,i)=>{const wrap=document.createElement('div');wrap.className='barwrap';const bar=document.createElement('div');bar.className='bar'+(d===isoToday()?' today':'');bar.style.height=`${sums[i]?Math.max(3,sums[i]/max*100):1}%`;const tip=document.createElement('span');tip.className='tip';tip.textContent=`${d}: ${sums[i].toFixed(2)}시간`;bar.appendChild(tip);const label=document.createElement('div');label.className='day';label.textContent=d.slice(5).replace('-','/');wrap.append(bar,label);chart.appendChild(wrap)});
  const tbody=$('rows');tbody.innerHTML='';
- entries.forEach(([d,r])=>{const tr=document.createElement('tr');
- [d,`${r.hours}시간`,r.task||'—'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});
- const td=document.createElement('td'),btn=document.createElement('button');btn.className='secondary smallbtn';btn.textContent='수정';btn.onclick=()=>{ $('date').value=d;$('hours').value=r.hours;$('task').value=r.task||'종합 / 모의고사';window.scrollTo({top:0,behavior:'smooth'})};td.appendChild(btn);tr.appendChild(td);tbody.appendChild(tr)});
- if(!entries.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=4;td.textContent='아직 기록이 없습니다. 첫 공부시간을 입력해 보세요.';td.className='muted';tr.appendChild(td);tbody.appendChild(tr)}
+ sessions.map((x,i)=>({...x,_i:i})).sort((a,b)=>b.date.localeCompare(a.date)||b._i-a._i).forEach(x=>{const tr=document.createElement('tr');
+ [x.date,`${x.kind}${x.memo?' · '+x.memo:''}`,`${n(x.hours).toFixed(2)}시간`,`${(n(x.hours)*n(x.focus)).toFixed(2)}시간`].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});
+ const td=document.createElement('td'),btn=document.createElement('button');btn.className='danger smallbtn';btn.textContent='삭제';btn.onclick=()=>{sessions.splice(x._i,1);persist()};td.appendChild(btn);tr.appendChild(td);tbody.appendChild(tr)});
+ if(!sessions.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=5;td.textContent='아직 기록이 없습니다. 공부 세션을 추가해 보세요.';td.className='muted';tr.appendChild(td);tbody.appendChild(tr)}
 }
-$('save').onclick=()=>{const d=$('date').value,h=Number($('hours').value);if(!d){alert('날짜를 선택하세요.');return}if($('hours').value===''||!Number.isFinite(h)||h<0||h>24){alert('공부시간을 0~24시간 사이로 입력하세요.');return}records[d]={hours:h,task:$('task').value};persist();$('hours').value=''};
-$('today').onclick=()=>{$('date').value=isoToday();render()};
-$('goal').onchange=render;
-$('clear').onclick=()=>{if(confirm('모든 공부 기록을 삭제할까요? 이 작업은 되돌릴 수 없습니다.')){records={};persist()}};
-$('export').onclick=()=>{const lines=[['date','hours','task'],...Object.entries(records).sort((a,b)=>a[0].localeCompare(b[0])).map(([d,r])=>[d,r.hours,`"${String(r.task||'').replace(/"/g,'""')}"`])];const blob=new Blob(['\ufeff'+lines.map(x=>x.join(',')).join('\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='pte-study-hours.csv';a.click();URL.revokeObjectURL(url)};
+$('save').onclick=()=>{const date=$('date').value,h=n($('hours').value);if(!date){alert('날짜를 선택하세요.');return}if(!$('hours').value||!Number.isFinite(h)||h<=0||h>24){alert('세션 시간을 0보다 크고 24시간 이하로 입력하세요.');return}
+ sessions.push({date,hours:h,kind:$('kind').value,focus:n($('focus').value),memo:$('memo').value.trim()});persist();$('hours').value='';$('memo').value=''};
+$('today').onclick=()=>{$('date').value=isoToday();render()};$('goal').onchange=render;
+$('clear').onclick=()=>{if(confirm('모든 세션 기록을 삭제할까요? 되돌릴 수 없습니다.')){sessions=[];persist()}};
+$('export').onclick=()=>{const esc=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const lines=[['date','hours','type','focus_weight','focused_hours','memo'],...sessions.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>[x.date,x.hours,esc(x.kind),x.focus,(n(x.hours)*n(x.focus)).toFixed(2),esc(x.memo)])];const blob=new Blob(['\ufeff'+lines.map(x=>x.join(',')).join('\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='pte-study-sessions.csv';a.click();URL.revokeObjectURL(url)};
 render();
-</script>
-</body></html>
+</script></body></html>
