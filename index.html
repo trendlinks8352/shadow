@@ -48,13 +48,13 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;
 <p class="muted" style="margin-bottom:0">집중 학습시간 = 세션 시간 × 선택한 집중도. 집중도는 학습관리용 추정치입니다.</p>
 </section>
 <section class="card" style="margin-top:16px">
-<div class="sectionhead"><h2>누적 공부시간 그래프</h2><span class="muted">X축: 날짜 · Y축: 누적 합계시간</span></div>
-<p class="muted">각 날짜까지 기록한 공부시간을 계속 더한 선 그래프입니다. 그래프 위에 점을 누르거나 마우스를 올리면 해당 날짜의 누적 시간을 확인할 수 있습니다.</p>
+<div class="sectionhead"><h2>누적 공부시간 그래프</h2><span class="muted">X축: 날짜 · Y축: 누적 합계시간 (기본 0~250시간)</span></div>
+<p class="muted">각 날짜까지 기록한 공부시간을 계속 더한 선 그래프입니다. Y축은 최소 250시간까지 표시하고, 누적 기록이 250시간을 넘으면 축 범위가 자동으로 확장됩니다. 그래프 위에 점을 누르거나 마우스를 올리면 해당 날짜의 누적 시간을 확인할 수 있습니다.</p>
 <div class="chartbox" id="chart"></div>
 </section>
 <section class="card" style="margin-top:16px"><div class="sectionhead"><h2>세션 기록</h2><button class="danger smallbtn" id="clear">전체 기록 삭제</button></div>
 <div class="tablewrap"><table><thead><tr><th>날짜</th><th>유형 / 메모</th><th>실제 시간</th><th>집중 환산</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></section>
-<section class="note" style="margin-top:16px"><b>기록 저장 안내:</b> 기록은 현재 브라우저에 저장되며 다른 기기와 자동 동기화되지 않습니다. CSV를 정기적으로 다운로드해 백업하세요. CSV 업로드 시 기존 기록에 추가되며 자동 중복 제거는 하지 않습니다.</section>
+<section class="note" style="margin-top:16px"><b>기록 저장 안내:</b> 기록은 현재 브라우저에 저장되며 다른 기기와 자동 동기화되지 않습니다. CSV를 정기적으로 다운로드해 백업하세요. CSV 업로드 시 기존 기록에 추가되며 자동 중복 제거는 하지 않습니다. 모의고사 기준선은 학습 계획용 점검 지점이며, 해당 시간에 점수가 반드시 오르는 것은 아닙니다.</section>
 </main>
 <script>
 const KEY='pte72-study-tracker-v2';const $=id=>document.getElementById(id);
@@ -84,9 +84,17 @@ function renderChart(){
  if(!dates.length){chart.innerHTML='<p class="muted">기록을 추가하면 누적 그래프가 표시됩니다.</p>';return}
  let running=0;const pts=dates.map(date=>{running+=daily[date];return {date,total:running}});
  const W=Math.max(620,dates.length*44+90),H=310,L=62,R=22,T=22,B=54,plotW=W-L-R,plotH=H-T-B;
- const maxVal=Math.max(5,Math.ceil(pts[pts.length-1].total/5)*5),y=v=>T+plotH-(v/maxVal)*plotH,x=i=>L+(pts.length===1?plotW/2:i/(pts.length-1)*plotW);
- let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="날짜별 누적 공부시간 선 그래프">`;
- for(let k=0;k<=5;k++){const v=maxVal*k/5,yy=y(v);s+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e5e9f2" stroke-width="1"/><text x="${L-10}" y="${yy+4}" text-anchor="end" font-size="12" fill="#667085">${v.toFixed(v%1?1:0)}h</text>`}
+ const maxVal=Math.max(250,Math.ceil(pts[pts.length-1].total/50)*50),y=v=>T+plotH-(v/maxVal)*plotH,x=i=>L+(pts.length===1?plotW/2:i/(pts.length-1)*plotW);
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="날짜별 누적 공부시간 선 그래프와 모의고사 점검 기준">`;
+ for(let k=0;k<=maxVal/50;k++){const v=k*50,yy=y(v);s+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e5e9f2" stroke-width="1"/><text x="${L-10}" y="${yy+4}" text-anchor="end" font-size="12" fill="#667085">${v}h</text>`}
+ // Checkpoint guides: diagnostic review every 50h, full mock exams every 100h.
+ for(let v=50;v<=maxVal;v+=50){
+   const yy=y(v),isMock=v%100===0,isGoal=v===250;
+   const color=isGoal?'#15956b':(isMock?'#d97706':'#98a2b3');
+   s+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="${color}" stroke-width="${isGoal?2:1.4}" stroke-dasharray="${isGoal?'6 4':(isMock?'4 4':'2 5')}"/>`;
+   let label=isGoal?'250h 목표 점검':(isMock?`${v}h 모의고사`:`${v}h 점검`);
+   if(v<maxVal || v===maxVal) s+=`<text x="${W-R-4}" y="${Math.max(T+11,yy-5)}" text-anchor="end" font-size="11" font-weight="${isGoal||isMock?'700':'500'}" fill="${color}">${label}</text>`;
+ }
  const path=pts.map((p,i)=>`${i?'L':'M'} ${x(i)} ${y(p.total)}`).join(' ');
  s+=`<path d="${path}" fill="none" stroke="#3b65f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
  pts.forEach((p,i)=>{const xx=x(i),yy=y(p.total),label=p.date.slice(5).replace('-','/');s+=`<circle cx="${xx}" cy="${yy}" r="4.5" fill="#3b65f5"><title>${p.date}: 누적 ${fmt(p.total)}시간 (당일 ${fmt(daily[p.date])}시간)</title></circle>`;
