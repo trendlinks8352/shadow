@@ -48,8 +48,8 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;
 <p class="muted" style="margin-bottom:0">집중 학습시간 = 세션 시간 × 선택한 집중도. 집중도는 학습관리용 추정치입니다.</p>
 </section>
 <section class="card" style="margin-top:16px">
-<div class="sectionhead"><h2>누적 공부시간 그래프</h2><span class="muted">X축: 날짜 · Y축: 누적 합계시간 (0~300시간) (기본 0~250시간)</span></div>
-<p class="muted">각 날짜까지 기록한 공부시간을 계속 더한 선 그래프입니다. Y축은 최소 250시간까지 표시하고, 누적 기록이 250시간을 넘으면 축 범위가 자동으로 확장됩니다. 그래프 위에 점을 누르거나 마우스를 올리면 해당 날짜의 누적 시간을 확인할 수 있습니다.</p>
+<div class="sectionhead"><h2>누적 공부시간 그래프</h2><span class="muted">X축: 오늘부터 2026-12-14까지 · Y축: 누적 합계시간 (0~300시간)</span></div>
+<p class="muted">각 날짜까지 기록한 공부시간을 계속 더한 선 그래프입니다. X축은 기록 시작일부터 2026-12-14까지 표시하며, 기록이 없는 날은 누적 합계가 그대로 유지됩니다. Y축은 0~300시간으로 고정되어 있고 가로 스크롤이 없습니다. 50시간마다 점검선을 표시하며, 100·200시간은 전체 모의고사 점검, 250시간은 목표 점검 지점입니다.</p>
 <div class="chartbox" id="chart"></div>
 </section>
 <section class="card" style="margin-top:16px"><div class="sectionhead"><h2>세션 기록</h2><button class="danger smallbtn" id="clear">전체 기록 삭제</button></div>
@@ -80,9 +80,13 @@ function render(){
 }
 function renderChart(){
  const daily={};sessions.forEach(x=>{if(x.date)daily[x.date]=(daily[x.date]||0)+num(x.hours)});
- const dates=Object.keys(daily).sort();const chart=$('chart');
- if(!dates.length){chart.innerHTML='<p class="muted">기록을 추가하면 누적 그래프가 표시됩니다.</p>';return}
- let running=0;const pts=dates.map(date=>{running+=daily[date];return {date,total:running}});
+ const chart=$('chart');
+ const startDate=(Object.keys(daily).sort()[0]||isoToday());
+ const endDate='2026-12-14';
+ if(startDate>endDate){chart.innerHTML='<p class="muted">기록 시작일이 2026-12-14 이후입니다. 날짜 범위를 확인해 주세요.</p>';return}
+ const dates=[];const cursor=new Date(startDate+'T12:00:00'),end=new Date(endDate+'T12:00:00');
+ while(cursor<=end){dates.push(`${cursor.getFullYear()}-${String(cursor.getMonth()+1).padStart(2,'0')}-${String(cursor.getDate()).padStart(2,'0')}`);cursor.setDate(cursor.getDate()+1)}
+ let running=0;const pts=dates.map(date=>{running+=daily[date]||0;return {date,total:running}});
  const W=900,H=340,L=64,R=24,T=28,B=58,plotW=W-L-R,plotH=H-T-B;
  const maxVal=300,y=v=>T+plotH-(v/maxVal)*plotH,x=i=>L+(pts.length===1?plotW/2:i/(pts.length-1)*plotW);
  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="날짜별 누적 공부시간 선 그래프와 모의고사 점검 기준">`;
