@@ -14,7 +14,7 @@ label{display:block;font-weight:650;margin:12px 0 6px}input,select,button{font:i
 button{border:0;border-radius:10px;padding:11px 15px;background:var(--accent);color:white;font-weight:700;cursor:pointer}button.secondary{background:#eef1fa;color:#27345a}button.danger{background:#fff0f0;color:#a32b2b}
 .formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .progress{height:14px;background:#edf0f7;border-radius:999px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px}
-.chartbox{width:100%;overflow-x:auto}.chartbox svg{display:block;width:100%;min-width:600px;height:auto}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.chartbox{width:100%;overflow:hidden}.chartbox svg{display:block;width:100%;max-width:100%;height:auto}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);font-size:.9rem}th{color:var(--muted);font-weight:650}.tablewrap{overflow-x:auto}.smallbtn{padding:6px 9px;font-size:.8rem}
 .note{background:#fff8e8;border:1px solid #f1dfae;border-radius:12px;padding:12px 14px;font-size:.9rem;line-height:1.55}
 .uploadbox{border:1px dashed #aab6d0;border-radius:12px;padding:14px;margin-top:12px;background:#fafbff}
@@ -48,7 +48,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;
 <p class="muted" style="margin-bottom:0">집중 학습시간 = 세션 시간 × 선택한 집중도. 집중도는 학습관리용 추정치입니다.</p>
 </section>
 <section class="card" style="margin-top:16px">
-<div class="sectionhead"><h2>누적 공부시간 그래프</h2><span class="muted">X축: 날짜 · Y축: 누적 합계시간 (기본 0~250시간)</span></div>
+<div class="sectionhead"><h2>누적 공부시간 그래프</h2><span class="muted">X축: 날짜 · Y축: 누적 합계시간 (0~300시간) (기본 0~250시간)</span></div>
 <p class="muted">각 날짜까지 기록한 공부시간을 계속 더한 선 그래프입니다. Y축은 최소 250시간까지 표시하고, 누적 기록이 250시간을 넘으면 축 범위가 자동으로 확장됩니다. 그래프 위에 점을 누르거나 마우스를 올리면 해당 날짜의 누적 시간을 확인할 수 있습니다.</p>
 <div class="chartbox" id="chart"></div>
 </section>
@@ -83,10 +83,10 @@ function renderChart(){
  const dates=Object.keys(daily).sort();const chart=$('chart');
  if(!dates.length){chart.innerHTML='<p class="muted">기록을 추가하면 누적 그래프가 표시됩니다.</p>';return}
  let running=0;const pts=dates.map(date=>{running+=daily[date];return {date,total:running}});
- const W=Math.max(620,dates.length*44+90),H=310,L=62,R=22,T=22,B=54,plotW=W-L-R,plotH=H-T-B;
- const maxVal=Math.max(250,Math.ceil(pts[pts.length-1].total/50)*50),y=v=>T+plotH-(v/maxVal)*plotH,x=i=>L+(pts.length===1?plotW/2:i/(pts.length-1)*plotW);
+ const W=900,H=340,L=64,R=24,T=28,B=58,plotW=W-L-R,plotH=H-T-B;
+ const maxVal=300,y=v=>T+plotH-(v/maxVal)*plotH,x=i=>L+(pts.length===1?plotW/2:i/(pts.length-1)*plotW);
  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="날짜별 누적 공부시간 선 그래프와 모의고사 점검 기준">`;
- for(let k=0;k<=maxVal/50;k++){const v=k*50,yy=y(v);s+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e5e9f2" stroke-width="1"/><text x="${L-10}" y="${yy+4}" text-anchor="end" font-size="12" fill="#667085">${v}h</text>`}
+ for(let k=0;k<=6;k++){const v=k*50,yy=y(v);s+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e5e9f2" stroke-width="1"/><text x="${L-10}" y="${yy+4}" text-anchor="end" font-size="12" fill="#667085">${v}h</text>`}
  // Checkpoint guides: diagnostic review every 50h, full mock exams every 100h.
  for(let v=50;v<=maxVal;v+=50){
    const yy=y(v),isMock=v%100===0,isGoal=v===250;
@@ -98,7 +98,7 @@ function renderChart(){
  const path=pts.map((p,i)=>`${i?'L':'M'} ${x(i)} ${y(p.total)}`).join(' ');
  s+=`<path d="${path}" fill="none" stroke="#3b65f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
  pts.forEach((p,i)=>{const xx=x(i),yy=y(p.total),label=p.date.slice(5).replace('-','/');s+=`<circle cx="${xx}" cy="${yy}" r="4.5" fill="#3b65f5"><title>${p.date}: 누적 ${fmt(p.total)}시간 (당일 ${fmt(daily[p.date])}시간)</title></circle>`;
-  if(pts.length<=18||i===0||i===pts.length-1||i%Math.ceil(pts.length/12)===0)s+=`<text x="${xx}" y="${H-28}" text-anchor="middle" font-size="11" fill="#667085">${label}</text>`});
+  if(pts.length<=10||i===0||i===pts.length-1||i%Math.ceil(pts.length/10)===0)s+=`<text x="${xx}" y="${H-30}" text-anchor="middle" font-size="11" fill="#667085">${label}</text>`});
  s+=`<text x="${L+plotW/2}" y="${H-7}" text-anchor="middle" font-size="12" fill="#475467">날짜</text><text transform="translate(16 ${T+plotH/2}) rotate(-90)" text-anchor="middle" font-size="12" fill="#475467">누적 합계시간</text></svg>`;
  chart.innerHTML=s;
 }
